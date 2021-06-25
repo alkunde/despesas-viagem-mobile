@@ -7,16 +7,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import Routes from './routes';
 
 const App: React.FC = () => {
-    const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = useColorScheme() === 'dark';
 
-    return (
-        <NavigationContainer>
-            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-            <View style={{ flex: 1 }}>
-                <Routes />
-            </View>
-        </NavigationContainer>
-    )
+  return (
+    <NavigationContainer>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <View style={{ flex: 1 }}>
+        <Routes />
+      </View>
+    </NavigationContainer>
+  )
 };
 
 export default App;

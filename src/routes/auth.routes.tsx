@@ -6,12 +6,12 @@ import SignIn from '../pages/SingIn';
 const Auth = createStackNavigator();
 
 const AuthRoutes: React.FC = () => (
-    <Auth.Navigator screenOptions={{
-        headerShown: false
-    }}
-    >
-        <Auth.Screen name="SignIn" component={SignIn} />
-    </Auth.Navigator>
+  <Auth.Navigator screenOptions={{
+    headerShown: false
+  }}
+  >
+    <Auth.Screen name="SignIn" component={SignIn} />
+  </Auth.Navigator>
 );
 
 export default AuthRoutes;
