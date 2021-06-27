@@ -1,6 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { View, Text, TextInput, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import { View, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
@@ -15,7 +14,6 @@ import Button from '../../components/Button';
 import {
   Container, Title
 } from './styles';
-import api from '../../services/api';
 
 interface SignInFormData {
   email: string;
@@ -26,15 +24,11 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const navigation = useNavigation();
-
   const { signIn } = useAuth();
 
   const handleSignIn = useCallback(
     async (data: SignInFormData) => {
       try {
-        console.log(data);
-        console.log("Teste");
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -48,7 +42,6 @@ const SignIn: React.FC = () => {
           abortEarly: false,
         });
 
-        console.log(data);
         await signIn({
           email: data.email,
           password: data.password,
@@ -101,27 +94,6 @@ const SignIn: React.FC = () => {
             </Button>
           </Form>
         </Container>
-        {/* <Form ref={formRef} onSubmit={() => { }}>
-        <Input
-          autoCorrect={false}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          name="email"
-          placeholder="E-mail"
-          returnKeyType="next"
-        />
-        <Input
-          ref={passwordInputRef}
-          secureTextEntry
-          name="password"
-          placeholder="Senha"
-          returnKeyType="send"
-        />
-
-        <Button onPress={() => formRef.current?.submitForm()}>
-          Entrar
-        </Button>
-      </Form> */}
       </View>
     </>
   );
