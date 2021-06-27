@@ -4,6 +4,8 @@ import React from 'react';
 import { View, StatusBar, useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
+import AppProvider from './hooks';
+
 import Routes from './routes';
 
 const App: React.FC = () => {
@@ -11,10 +13,12 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View style={{ flex: 1 }}>
-        <Routes />
-      </View>
+      <StatusBar backgroundColor="#312e38" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <AppProvider>
+        <View style={{ flex: 1 }}>
+          <Routes />
+        </View>
+      </AppProvider>
     </NavigationContainer>
   )
 };
