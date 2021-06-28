@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from 'react';
-import { View, TextInput, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
+import { SafeAreaView, View, TextInput, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -12,7 +13,10 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import {
-  Container, Title
+  Container,
+  Title,
+  CreateAccountButton,
+  CreateAccountButtonText,
 } from './styles';
 
 interface SignInFormData {
@@ -23,6 +27,8 @@ interface SignInFormData {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const passwordInputRef = useRef<TextInput>(null);
+
+  const navigation = useNavigation();
 
   const { signIn } = useAuth();
 
@@ -64,7 +70,7 @@ const SignIn: React.FC = () => {
 
   return (
     <>
-      <View style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Container>
           <View>
             <Title>Faça login</Title>
@@ -79,6 +85,7 @@ const SignIn: React.FC = () => {
               icon="mail"
               placeholder="E-mail"
               returnKeyType="next"
+              onSubmitEditing={() => passwordInputRef.current?.focus()}
             />
             <Input
               ref={passwordInputRef}
@@ -94,7 +101,12 @@ const SignIn: React.FC = () => {
             </Button>
           </Form>
         </Container>
-      </View>
+
+        <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
+          <Icon name="log-in" size={20} color="#ff9000" />
+          <CreateAccountButtonText>Criar uma conta</CreateAccountButtonText>
+        </CreateAccountButton>
+      </SafeAreaView>
     </>
   );
 };
