@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, FlatList } from 'react-native';
-import { Expense, ExpenseProps } from '../../components/Expense';
 
 import Header from '../../components/Header';
+import { Expense, ExpenseProps } from '../../components/Expense';
 import api from '../../services/api';
 
 // import { Container } from './styles';
@@ -31,6 +31,7 @@ const Expenses: React.FC = () => {
       <SafeAreaView>
         <Header>Despesas</Header>
         <FlatList
+          style={{ padding: 16 }}
           data={expenseList}
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Alert } from 'react-native';
 import { useAuth } from '../../hooks/auth';
 
 import { Button, ButtonText, Container } from './styles';
@@ -22,6 +22,10 @@ const Dashboard: React.FC = () => {
 
   function handleConfigureNavigation() {
     console.log('Configurações');
+    Alert.alert(
+      'Configurações',
+      'Em desenvolvimento'
+    )
   }
 
   function handleSignOut() {
@@ -39,7 +43,7 @@ const Dashboard: React.FC = () => {
         </Button>
       </Container>
       <Container>
-        <Button onPress={handleTravelNavigation}>
+        <Button onPress={handleConfigureNavigation}>
           <ButtonText>Configurações</ButtonText>
         </Button>
         <Button onPress={handleSignOut}>
