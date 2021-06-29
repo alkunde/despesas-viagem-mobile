@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { SafeAreaView, View, TextInput, Alert } from 'react-native';
+import { SafeAreaView, View, TextInput, Alert, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
@@ -44,6 +44,7 @@ const SignIn: React.FC = () => {
           password: Yup.string().required('Senha obrigatória'),
         });
 
+        Keyboard.dismiss();
         await schema.validate(data, {
           abortEarly: false,
         });
@@ -53,6 +54,7 @@ const SignIn: React.FC = () => {
           password: data.password,
         });
       } catch (err) {
+        console.log(err);
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 

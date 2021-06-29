@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Alert, SafeAreaView, View, TextInput } from 'react-native';
+import { Alert, SafeAreaView, View, TextInput, Keyboard } from 'react-native';
 import Icon from "react-native-vector-icons/Feather";
 import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
@@ -42,6 +42,7 @@ const SignUp: React.FC = () => {
         abortEarly: false,
       });
 
+      Keyboard.dismiss();
       await api.post('/users', data);
 
       Alert.alert(
