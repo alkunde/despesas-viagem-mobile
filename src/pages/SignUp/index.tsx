@@ -111,7 +111,7 @@ const SignUp: React.FC = () => {
       </SafeAreaView>
 
       <BackToSignIn onPress={() => navigation.goBack()}>
-        <Icon name="arrow-left" size={20} color="#fff" />
+        <Icon name="arrow-left" size={20} color="#a2aebb" />
         <BackToSignInText>Voltar</BackToSignInText>
       </BackToSignIn>
     </>
