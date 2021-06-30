@@ -11,17 +11,14 @@ const Dashboard: React.FC = () => {
   const { signOut } = useAuth();
 
   function handleExpenseNavigation() {
-    console.log('Despesas');
     navigation.navigate('Expenses');
   }
 
   function handleTravelNavigation() {
-    console.log('Viagens');
     navigation.navigate('Travels');
   }
 
   function handleConfigureNavigation() {
-    console.log('Configurações');
     Alert.alert(
       'Configurações',
       'Em desenvolvimento'
