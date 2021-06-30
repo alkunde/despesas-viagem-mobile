@@ -131,7 +131,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.despesasviagemmobile"
+        applicationId "ufpr.andrekunde.despesasviagem"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

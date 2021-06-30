@@ -1,4 +1,4 @@
-package com.despesasviagemmobile;
+package ufpr.andrekunde.despesasviagem;
 
 import android.app.Application;
 import android.content.Context;
