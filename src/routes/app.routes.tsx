@@ -5,6 +5,7 @@ import Dashboard from '../pages/Dashboard';
 import Expenses from '../pages/Expenses';
 import Travels from '../pages/Travels';
 import ExpenseDetail from '../pages/ExpenseDetail';
+import TravelDetail from '../pages/TravelDetail';
 
 const App = createStackNavigator();
 
@@ -17,6 +18,7 @@ const AppRoutes: React.FC = () => (
     <App.Screen name="Expenses" component={Expenses} />
     <App.Screen name="Travels" component={Travels} />
     <App.Screen name="ExpenseDetail" component={ExpenseDetail} />
+    <App.Screen name="TravelDetail" component={TravelDetail} />
   </App.Navigator>
 )
 

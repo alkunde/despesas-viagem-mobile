@@ -3,9 +3,9 @@ import { useNavigation } from '@react-navigation/native';
 import { FlatList, ActivityIndicator } from 'react-native';
 
 import Header from '../../components/Header';
+import Button from '../../components/Button';
 import { Expense, ExpenseProps } from '../../components/Expense';
 import api from '../../services/api';
-import Button from '../../components/Button';
 
 import { Container, Content } from './styles';
 
