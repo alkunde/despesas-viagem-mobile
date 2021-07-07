@@ -1,38 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { FlatList, ActivityIndicator } from 'react-native';
 
 import Header from '../../components/Header';
 import { Expense, ExpenseProps } from '../../components/Expense';
 import api from '../../services/api';
+import Button from '../../components/Button';
 
-// import { Container } from './styles';
+import { Container, Content } from './styles';
 
 const Expenses: React.FC = () => {
   const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const { navigate } = useNavigation();
 
   useEffect(() => {
-    console.log("useEffect");
     async function getExpenses(): Promise<void> {
       const response = await api.get("/expenses");
-      console.log(response.data);
 
       setExpenseList(response.data);
+      setLoading(false);
     }
 
     getExpenses();
   }, []);
 
   function handleExpenseDetail(expenseSelected: ExpenseProps) {
-    console.log(expenseSelected);
+    navigate("ExpenseDetail", { expenseSelected });
   }
 
   return (
-    <>
-      <SafeAreaView>
-        <Header>Despesas</Header>
+    <Container>
+      <Header>Despesas</Header>
+      <Content>
+        <Button loading={false} onPress={() => handleExpenseDetail({} as ExpenseProps)}>Nova despesa</Button>
+        {loading ? <ActivityIndicator size="large" color="#666" /> : <></>}
         <FlatList
-          style={{ padding: 16 }}
+          style={{ marginTop: 8 }}
           data={expenseList}
+          showsVerticalScrollIndicator={false}
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
             <Expense
@@ -41,8 +48,8 @@ const Expenses: React.FC = () => {
             />
           )}
         />
-      </SafeAreaView>
-    </>
+      </Content>
+    </Container>
   );
 }
 

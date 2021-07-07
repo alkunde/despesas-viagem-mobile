@@ -11,12 +11,20 @@ export const Container = styled.View`
 export const Button = styled(RectButton)`
   width: 125px;
   height: 125px;
-  background: #adad;
+  background: #595959;
   border-radius: 10px;
+`;
+
+export const ButtonImage = styled.View`
+  flex: 1;
   justify-content: center;
   align-items: center;
+  margin-top: 16px;
 `;
 
 export const ButtonText = styled.Text`
+  width: 100%;
   color: #fff;
+  text-align: center;
+  padding: 16px;
 `;

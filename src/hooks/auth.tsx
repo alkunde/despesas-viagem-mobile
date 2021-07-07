@@ -30,7 +30,7 @@ const AuthProvider: React.FC = ({ children }) => {
     async function loadStorageData(): Promise<void> {
       const [token, user] = await AsyncStorage.multiGet([
         '@DespesasViagem:token',
-        '@DespesasViagem:user'
+        '@DespesasViagem:user',
       ]);
 
       if (token[1] && user[1]) {
@@ -72,7 +72,7 @@ const AuthProvider: React.FC = ({ children }) => {
     <AuthContext.Provider value={{ user: data.user, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
 function useAuth(): AuthContextData {

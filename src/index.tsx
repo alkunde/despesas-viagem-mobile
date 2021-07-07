@@ -5,7 +5,6 @@ import { View, StatusBar, useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
 import AppProvider from './hooks';
-
 import Routes from './routes';
 
 const App: React.FC = () => {
@@ -13,7 +12,7 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor="#312e38" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar backgroundColor="#3f85" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <AppProvider>
         <View style={{ flex: 1 }}>
           <Routes />

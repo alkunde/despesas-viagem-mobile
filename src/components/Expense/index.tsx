@@ -13,6 +13,7 @@ export type ExpenseProps = {
   amount: number;
   description: string;
   category: CategoryProps;
+  user: object;
 }
 
 type Props = RectButtonProps & {

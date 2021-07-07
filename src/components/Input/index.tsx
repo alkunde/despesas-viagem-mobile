@@ -6,7 +6,7 @@ import { Container, TextInput, Icon } from './styles';
 
 interface InputProps extends TextInputProps {
   name: string;
-  icon: string;
+  icon?: string;
 }
 
 interface InputValueReference {
@@ -60,11 +60,14 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = ({ name, ico
 
   return (
     <Container isFocused={isFocused} isErrored={!!error}>
-      <Icon
-        name={icon}
-        size={20}
-        color={isFocused || isFilled ? '#ff9000' : '#a2aebb'}
-      />
+      {icon
+        ? <Icon
+          name={icon}
+          size={20}
+          color={isFocused || isFilled ? '#ff9000' : '#a2aebb'}
+        />
+        : <></>
+      }
       <TextInput
         ref={inputElementRef}
         keyboardAppearance="light"

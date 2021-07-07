@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Alert, SafeAreaView, View, TextInput, Keyboard } from 'react-native';
 import Icon from "react-native-vector-icons/Feather";
@@ -20,6 +20,8 @@ interface SignUpFormData {
 }
 
 const SignUp: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+
   const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
 
@@ -43,6 +45,7 @@ const SignUp: React.FC = () => {
       });
 
       Keyboard.dismiss();
+      setLoading(true);
       await api.post('/users', data);
 
       Alert.alert(
@@ -52,6 +55,7 @@ const SignUp: React.FC = () => {
 
       navigation.goBack();
     } catch (err) {
+      setLoading(false);
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
 
@@ -106,7 +110,7 @@ const SignUp: React.FC = () => {
               onSubmitEditing={() => formRef.current?.submitForm()}
             />
 
-            <Button onPress={() => formRef.current?.submitForm()}>Cadastrar</Button>
+            <Button loading={loading} onPress={() => formRef.current?.submitForm()}>Cadastrar</Button>
           </Form>
         </Container>
       </SafeAreaView>

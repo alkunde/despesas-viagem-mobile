@@ -131,11 +131,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "ufpr.andrekunde.despesasviagem"
+        applicationId "com.despesasviagem"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.1"
     }
     splits {
         abi {
@@ -152,6 +152,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('despesas.keystore')
+            storePassword 'ufpr2021'
+            keyAlias 'despesas'
+            keyPassword 'ufpr2021'
+        }
     }
     buildTypes {
         debug {
@@ -160,7 +166,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -223,5 +229,5 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 
 project.ext.vectoricons = [
   iconFontNames: ['Feather.ttf']
-]
+];
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
