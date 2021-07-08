@@ -19,6 +19,7 @@ const Travels: React.FC = () => {
     async function getTravels(): Promise<void> {
       const response = await api.get("/travels");
 
+      console.log(response.data);
       setTravelList(response.data);
       setLoading(false);
     }

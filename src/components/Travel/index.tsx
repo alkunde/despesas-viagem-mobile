@@ -1,12 +1,12 @@
 import React from 'react';
-import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
-import { View } from 'react-native';
+import { Text } from 'react-native';
+import { RectButtonProps } from 'react-native-gesture-handler';
 
-// import { Container } from './styles';
+import { Container } from './styles';
 
 export type TravelProps = {
   id: number;
-  advancedAmount: number;
+  advancedAmount?: number;
   arrivalDate: Date;
   departureDate: Date;
   destination: string;
@@ -19,6 +19,27 @@ type Props = RectButtonProps & {
   data: TravelProps;
 }
 
-export function Travel({ data, ...rest }: Props) {
-  return <View />;
+export const Travel: React.FC<Props> = ({ data, ...rest }) => {
+  const {
+    origin,
+    departureDate,
+    destination,
+    arrivalDate,
+    reason,
+    advancedAmount
+  } = data;
+
+  return (
+    <Container {...rest}>
+      <Text>Origem: {origin}</Text>
+      <Text>Data Saída: {departureDate}</Text>
+      <Text>Destino: {destination}</Text>
+      <Text>Data Retorno: {arrivalDate}</Text>
+      <Text>Motivo: {reason}</Text>
+      {advancedAmount && advancedAmount > 0
+        ? <Text>Adiantamento: {advancedAmount}</Text>
+        : <></>
+      }
+    </Container>
+  )
 }

@@ -1,6 +1,13 @@
 import React from 'react';
-import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
+import { RectButtonProps } from 'react-native-gesture-handler';
+
+import {
+  Container,
+  DescriptionText,
+  AmountText,
+  DateText,
+  CategoryText
+} from './styles';
 
 export type CategoryProps = {
   id: number;
@@ -20,13 +27,13 @@ type Props = RectButtonProps & {
   data: ExpenseProps;
 }
 
-export function Expense({ data, ...rest }: Props) {
+export const Expense: React.FC<Props> = ({ data, ...rest }) => {
   return (
-    <RectButton {...rest} style={{ backgroundColor: 'rgba(255, 255, 255, 0.4)', marginBottom: 16, padding: 6, borderRadius: 6 }}>
-      <Text>Descrição: {data.description}</Text>
-      <Text>Valor: {data.amount}</Text>
-      <Text>Data: {data.expenseDate}</Text>
-      <Text>Categoria: {data.category.description}</Text>
-    </RectButton>
-  )
+    <Container {...rest}>
+      <DescriptionText>Descrição: {data.description}</DescriptionText>
+      <AmountText>Valor: {data.amount}</AmountText>
+      <DateText>Data: {data.expenseDate}</DateText>
+      <CategoryText>Categoria: {data.category.description}</CategoryText>
+    </Container>
+  );
 }

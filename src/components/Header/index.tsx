@@ -1,9 +1,8 @@
 import React from 'react';
-import { Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
-import { BackButton, Container } from './styles';
+import { BackButton, Container, Title } from './styles';
 
 interface HeaderProps {
   children: string;
@@ -17,16 +16,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
       <BackButton onPress={() => navigation.goBack()}>
         <Icon name="chevron-left" size={30} color="#fff" />
       </BackButton>
-      <Text
-        style={{
-          textAlign: 'center',
-          color: "#fff",
-          fontSize: 22,
-          fontWeight: "bold"
-        }}
-      >
-        {children}
-      </Text>
+      <Title>{children}</Title>
     </Container>
   );
 }

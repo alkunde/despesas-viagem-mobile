@@ -15,3 +15,10 @@ export const BackButton = styled(RectButton)`
   justify-content: center;
   align-items: center;
 `;
+
+export const Title = styled.Text`
+  text-align: center;
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+`;
