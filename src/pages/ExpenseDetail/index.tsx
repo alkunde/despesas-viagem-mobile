@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import {
   Alert,
   Keyboard,
-  SafeAreaView,
+  ScrollView,
   View,
   TextInput,
   Text,
@@ -16,7 +16,7 @@ import { FormHandles } from '@unform/core';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as Yup from 'yup';
 
-import { Container } from './styles';
+import { Container, Content } from './styles';
 
 import { CategoryProps, ExpenseProps } from '../../components/Expense';
 import api from '../../services/api';
@@ -26,7 +26,6 @@ import Header from '../../components/Header';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Icon from 'react-native-vector-icons/Feather';
-import { formatDate } from '../../utils/format';
 
 interface RouteParams {
   expenseSelected: ExpenseProps;
@@ -68,15 +67,16 @@ const ExpenseDetail: React.FC = () => {
 
     if (routeParams.expenseSelected.id) {
       const date = new Date(routeParams.expenseSelected.expenseDate);
+      const { expenseSelected } = routeParams;
 
       formRef.current?.setData({
-        description: routeParams.expenseSelected.description,
-        amount: routeParams.expenseSelected.amount.toString(),
-        category: routeParams.expenseSelected.category.description,
-        expenseDate: routeParams.expenseSelected.expenseDate
+        description: expenseSelected.description,
+        amount: expenseSelected.amount.toString(),
+        category: expenseSelected.category.description,
+        expenseDate: expenseSelected.expenseDate
         // expenseDate: date.toLocaleDateString("pt-BR")
       });
-      setCategory(routeParams.expenseSelected.category);
+      setCategory(expenseSelected.category);
       setExpenseDate(date);
     } else {
       formRef.current?.setFieldValue('expenseDate', expenseDate.toLocaleDateString("pt-BR"))
@@ -130,7 +130,6 @@ const ExpenseDetail: React.FC = () => {
 
       navigation.goBack();
     } catch (err) {
-      console.log(err);
       setLoading(false);
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -154,34 +153,38 @@ const ExpenseDetail: React.FC = () => {
   }, []);
 
   return (
-    <SafeAreaView>
+    <Container>
       <Header>Despesa</Header>
-      <Form ref={formRef} onSubmit={handleAddExpense}>
-        <Input
-          autoCapitalize="words"
-          name="description"
-          placeholder="Informe a descrição"
-          returnKeyType="next"
-          onSubmitEditing={() => amountRef.current?.focus()}
-        />
-        <Input
-          ref={amountRef}
-          keyboardType="numeric"
-          name="amount"
-          placeholder="Informe o valor"
-          returnKeyType="next"
-          onSubmitEditing={() => Keyboard.dismiss()}
-        />
-        <Input
-          name="category"
-          placeholder="Informe a categoria"
-          onPressIn={() => setShowPicker(true)}
-        />
-        <Input
-          name="expenseDate"
-          placeholder="Informe a data"
-          onPressIn={() => setShowDatePicker(true)}
-        />
+      <Content>
+        <ScrollView>
+          <Form ref={formRef} onSubmit={handleAddExpense}>
+            <Input
+              autoCapitalize="words"
+              name="description"
+              placeholder="Informe a descrição"
+              returnKeyType="next"
+              onSubmitEditing={() => amountRef.current?.focus()}
+            />
+            <Input
+              ref={amountRef}
+              keyboardType="numeric"
+              name="amount"
+              placeholder="Informe o valor"
+              returnKeyType="next"
+              onSubmitEditing={() => Keyboard.dismiss()}
+            />
+            <Input
+              name="category"
+              placeholder="Informe a categoria"
+              onPressIn={() => setShowPicker(true)}
+            />
+            <Input
+              name="expenseDate"
+              placeholder="Informe a data"
+              onPressIn={() => setShowDatePicker(true)}
+            />
+          </Form>
+        </ScrollView>
 
         <Button
           loading={loading}
@@ -189,7 +192,7 @@ const ExpenseDetail: React.FC = () => {
         >
           Cadastrar
         </Button>
-      </Form>
+      </Content>
 
       <DateTimePickerModal
         cancelTextIOS="Cancelar"
@@ -236,7 +239,7 @@ const ExpenseDetail: React.FC = () => {
           />
         </>
       </Modal>
-    </SafeAreaView>
+    </Container>
   );
 }
 

@@ -35,7 +35,7 @@ const Expenses: React.FC = () => {
       <Header>Despesas</Header>
       <Content>
         <Button loading={false} onPress={() => handleExpenseDetail({} as ExpenseProps)}>Nova despesa</Button>
-        {loading ? <ActivityIndicator size="large" color="#666" /> : <></>}
+        {loading ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> : <></>}
         <FlatList
           style={{ marginTop: 8 }}
           data={expenseList}

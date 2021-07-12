@@ -7,16 +7,16 @@ import { useAuth } from '../../hooks/auth';
 import { Button, ButtonImage, ButtonText, Container } from './styles';
 
 const Dashboard: React.FC = () => {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
 
   const { signOut } = useAuth();
 
   function handleExpenseNavigation() {
-    navigation.navigate('Expenses');
+    navigate('Expenses');
   }
 
   function handleTravelNavigation() {
-    navigation.navigate('Travels');
+    navigate('Travels');
   }
 
   function handleConfigureNavigation() {
@@ -24,6 +24,10 @@ const Dashboard: React.FC = () => {
       'Configurações',
       'Em desenvolvimento'
     )
+  }
+
+  function handleApprovalsNavigation() {
+    navigate('Approvals')
   }
 
   function handleSignOut() {
@@ -53,6 +57,14 @@ const Dashboard: React.FC = () => {
           </ButtonImage>
           <ButtonText>Ajustes</ButtonText>
         </Button>
+        <Button onPress={handleApprovalsNavigation}>
+          <ButtonImage>
+            <Icon name="check-square" size={25} color="rgba(255, 255, 255, 0.6)" />
+          </ButtonImage>
+          <ButtonText>Aprovações</ButtonText>
+        </Button>
+      </Container>
+      <Container>
         <Button onPress={handleSignOut}>
           <ButtonImage>
             <Icon name="log-out" size={25} color="rgba(255, 255, 255, 0.6)" />

@@ -36,7 +36,7 @@ const Travels: React.FC = () => {
       <Header>Viagens</Header>
       <Content>
         <Button loading={false} onPress={() => handleTravelDetail({} as TravelProps)}>Nova viagem</Button>
-        {loading ? <ActivityIndicator size="large" color="#666" /> : <></>}
+        {loading ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> : <></>}
         <FlatList
           style={{ marginTop: 8 }}
           data={travelList}
