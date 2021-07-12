@@ -9,3 +9,23 @@ export const Content = styled.View`
   margin-left: 16px;
   margin-right: 16px;
 `;
+
+export const HeaderModal = styled.View`
+  flex-direction: row;
+  height: 46px;
+  align-items: center;
+`;
+
+export const BackButton = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  width: 46px;
+  height: 46px;
+  margin-left: 16px;
+  margin-right: 16px;
+`;
+
+export const HeaderTitle = styled.Text`
+  text-align: center;
+  font-size: 22px;
+`;

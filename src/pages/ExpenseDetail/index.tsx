@@ -16,7 +16,7 @@ import { FormHandles } from '@unform/core';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as Yup from 'yup';
 
-import { Container, Content } from './styles';
+import { Container, Content, HeaderModal, BackButton, HeaderTitle } from './styles';
 
 import { CategoryProps, ExpenseProps } from '../../components/Expense';
 import api from '../../services/api';
@@ -212,22 +212,12 @@ const ExpenseDetail: React.FC = () => {
           Alert.alert('Modal is closed');
         }}>
         <>
-          <View style={{ flexDirection: 'row', height: 46, alignItems: 'center' }}>
-            <TouchableOpacity
-              style={{
-                width: 46,
-                height: 46,
-                marginLeft: 16,
-                marginRight: 16,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-              onPress={() => setShowPicker(false)}
-            >
+          <HeaderModal>
+            <BackButton onPress={() => setShowPicker(false)}>
               <Icon name="chevron-left" color="#000" size={25} />
-            </TouchableOpacity>
-            <Text style={{ textAlign: 'center', fontSize: 22 }}>Categorias</Text>
-          </View>
+            </BackButton>
+            <HeaderTitle>Categorias</HeaderTitle>
+          </HeaderModal>
           <FlatList
             data={categories}
             keyExtractor={item => String(item.id)}
