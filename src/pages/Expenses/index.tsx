@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { FlatList, ActivityIndicator } from 'react-native';
 
 import Header from '../../components/Header';
@@ -15,15 +15,18 @@ const Expenses: React.FC = () => {
 
   const { navigate } = useNavigation();
 
-  useEffect(() => {
-    async function getExpenses(): Promise<void> {
-      const response = await api.get("/expenses");
+  useFocusEffect(
+    React.useCallback(() => {
+      loadExpenses()
+    }, [])
+  );
 
-      setExpenseList(response.data);
-      setLoading(false);
-    }
+  const loadExpenses = useCallback(async () => {
+    setLoading(true);
+    const response = await api.get("/expenses");
 
-    getExpenses();
+    setExpenseList(response.data);
+    setLoading(false);
   }, []);
 
   function handleExpenseDetail(expenseSelected: ExpenseProps) {
