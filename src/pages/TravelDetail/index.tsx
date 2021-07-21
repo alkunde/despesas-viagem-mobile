@@ -12,7 +12,7 @@ import Header from '../../components/Header';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { TravelProps } from '../../components/Travel';
-// import { Container } from './styles';
+import { Container, Content } from './styles';
 
 interface RouteParams {
   travelSelected: TravelProps;
@@ -89,48 +89,50 @@ const TravelDetail: React.FC = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header>Viagem</Header>
-      <ScrollView>
-        <Form ref={formRef} onSubmit={handleAddTravel}>
-          <Input
-            autoCapitalize="words"
-            name="origin"
-            placeholder="Informe a cidade de origem"
-            returnKeyType="next"
-          />
-          <Input
-            autoCapitalize="words"
-            name="destination"
-            placeholder="Informe a cidade de destino"
-            returnKeyType="next"
-          />
-          <Input
-            name="arrivalDate"
-            placeholder="Informe a data de partida"
-          />
-          <Input
-            name="departureDate"
-            placeholder="Informe a data de chegada"
-          />
-          <Input
-            autoCapitalize="sentences"
-            name="reason"
-            placeholder="Informe o motivo"
-            returnKeyType="next"
-          />
-          <Input
-            keyboardType="decimal-pad"
-            name="advancedAmount"
-            placeholder="Informe o valor adiantado"
-            returnKeyType="next"
-          />
-        </Form>
-      </ScrollView>
-      <Button
-        loading={loading}
-        onPress={() => formRef.current?.submitForm()}
-      >
-        Cadastrar
-      </Button>
+      <Content>
+        <ScrollView>
+          <Form ref={formRef} onSubmit={handleAddTravel}>
+            <Input
+              autoCapitalize="words"
+              name="origin"
+              placeholder="Informe a cidade de origem"
+              returnKeyType="next"
+            />
+            <Input
+              autoCapitalize="words"
+              name="destination"
+              placeholder="Informe a cidade de destino"
+              returnKeyType="next"
+            />
+            <Input
+              name="arrivalDate"
+              placeholder="Informe a data de partida"
+            />
+            <Input
+              name="departureDate"
+              placeholder="Informe a data de chegada"
+            />
+            <Input
+              autoCapitalize="sentences"
+              name="reason"
+              placeholder="Informe o motivo"
+              returnKeyType="next"
+            />
+            <Input
+              keyboardType="decimal-pad"
+              name="advancedAmount"
+              placeholder="Informe o valor adiantado"
+              returnKeyType="next"
+            />
+          </Form>
+        </ScrollView>
+        <Button
+          loading={loading}
+          onPress={() => formRef.current?.submitForm()}
+        >
+          Cadastrar
+        </Button>
+      </Content>
     </SafeAreaView>
   );
 }

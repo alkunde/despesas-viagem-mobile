@@ -12,6 +12,7 @@ export type TravelProps = {
   destination: string;
   origin: string;
   reason: string;
+  status: string;
   user: object;
 }
 
@@ -26,7 +27,8 @@ export const Travel: React.FC<Props> = ({ data, ...rest }) => {
     destination,
     arrivalDate,
     reason,
-    advancedAmount
+    advancedAmount,
+    status
   } = data;
 
   return (

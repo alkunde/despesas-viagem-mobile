@@ -1,7 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { View, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+
 import { useAuth } from '../../hooks/auth';
 
 import { Button, ButtonImage, ButtonText, Container } from './styles';
@@ -9,7 +10,8 @@ import { Button, ButtonImage, ButtonText, Container } from './styles';
 const Dashboard: React.FC = () => {
   const { navigate } = useNavigation();
 
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
+  console.log(user);
 
   function handleExpenseNavigation() {
     navigate('Expenses');
@@ -57,12 +59,17 @@ const Dashboard: React.FC = () => {
           </ButtonImage>
           <ButtonText>Ajustes</ButtonText>
         </Button>
-        <Button onPress={handleApprovalsNavigation}>
-          <ButtonImage>
-            <Icon name="check-square" size={25} color="rgba(255, 255, 255, 0.6)" />
-          </ButtonImage>
-          <ButtonText>Aprovações</ButtonText>
-        </Button>
+        {user.role === 'admin'
+          ? (
+            <Button onPress={handleApprovalsNavigation}>
+              <ButtonImage>
+                <Icon name="check-square" size={25} color="rgba(255, 255, 255, 0.6)" />
+              </ButtonImage>
+              <ButtonText>Aprovações</ButtonText>
+            </Button>
+          )
+          : <></>
+        }
       </Container>
       <Container>
         <Button onPress={handleSignOut}>

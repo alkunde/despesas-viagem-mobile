@@ -3,9 +3,7 @@ import {
   Alert,
   Keyboard,
   ScrollView,
-  View,
   TextInput,
-  Text,
   Modal,
   TouchableOpacity,
   FlatList
@@ -14,9 +12,17 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Icon from 'react-native-vector-icons/Feather';
 import * as Yup from 'yup';
 
-import { Container, Content, HeaderModal, BackButton, HeaderTitle } from './styles';
+import {
+  Container,
+  Content,
+  HeaderModal,
+  BackButton,
+  HeaderTitle,
+  ItemList
+} from './styles';
 
 import { CategoryProps, ExpenseProps } from '../../components/Expense';
 import api from '../../services/api';
@@ -25,7 +31,6 @@ import getValidationErrors from '../../utils/getValidationErrors';
 import Header from '../../components/Header';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import Icon from 'react-native-vector-icons/Feather';
 
 interface RouteParams {
   expenseSelected: ExpenseProps;
@@ -223,7 +228,7 @@ const ExpenseDetail: React.FC = () => {
             keyExtractor={item => String(item.id)}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handleItemSelected(item)}>
-                <Text style={{ padding: 16, fontSize: 16 }}>{item.description}</Text>
+                <ItemList>{item.description}</ItemList>
               </TouchableOpacity>
             )}
           />

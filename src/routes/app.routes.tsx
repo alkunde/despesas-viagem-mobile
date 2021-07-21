@@ -7,6 +7,7 @@ import Travels from '../pages/Travels';
 import ExpenseDetail from '../pages/ExpenseDetail';
 import TravelDetail from '../pages/TravelDetail';
 import Approvals from '../pages/Approvals';
+import ApprovalDetail from '../pages/ApprovalDetail';
 
 const App = createStackNavigator();
 
@@ -21,6 +22,7 @@ const AppRoutes: React.FC = () => (
     <App.Screen name="Approvals" component={Approvals} />
     <App.Screen name="ExpenseDetail" component={ExpenseDetail} />
     <App.Screen name="TravelDetail" component={TravelDetail} />
+    <App.Screen name="ApprovalDetail" component={ApprovalDetail} />
   </App.Navigator>
 )
 

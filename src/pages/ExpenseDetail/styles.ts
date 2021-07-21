@@ -29,3 +29,8 @@ export const HeaderTitle = styled.Text`
   text-align: center;
   font-size: 22px;
 `;
+
+export const ItemList = styled.Text`
+  padding: 16px;
+  font-size: 16px;
+`;
