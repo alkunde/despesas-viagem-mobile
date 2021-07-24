@@ -27,14 +27,13 @@ const Expenses: React.FC = () => {
       const response = await api.get("/expenses");
 
       setExpenseList(response.data);
+      setLoading(false);
     } catch (err) {
-      console.log(err);
+      setLoading(false);
       Alert.alert(
         'Aviso',
         'Falha na conexão'
       );
-    } finally {
-      setLoading(false);
     }
   }, []);
 

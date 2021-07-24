@@ -1,12 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
-import { FlatList, ActivityIndicator, Text, Alert } from 'react-native';
+import { FlatList, ActivityIndicator, Alert, View } from 'react-native';
 import Header from '../../components/Header';
 
-import { Container } from './styles';
+import { Container, Content } from './styles';
 
 import api from '../../services/api';
-import { Expense } from '../../components/Expense';
+import { ExpenseReport } from '../../components/ExpenseReport';
+import Button from '../../components/Button';
 
 const ApprovalDetail: React.FC = () => {
   const route = useRoute();
@@ -18,15 +19,14 @@ const ApprovalDetail: React.FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(route.params);
-      loadExpenses()
+      loadExpenses(route.params.id);
     }, [])
   );
 
-  const loadExpenses = useCallback(async () => {
+  const loadExpenses = useCallback(async (id) => {
     try {
       setLoading(true);
-      const response = await api.get("/expenses/travel/" + 1);
+      const response = await api.get("/expenses/travel/" + id);
 
       setExpenseList(response.data);
     } catch (err) {
@@ -39,26 +39,54 @@ const ApprovalDetail: React.FC = () => {
     }
   }, []);
 
+  function handleClose() {
+    //TODO: percorrer listagem de despesas
+    //      e verificar se alguma foi marcada
+    //      se sim, enviar o report
+    //      se não, avisar que não tem despesa marcada
+    Alert.alert(
+      'Aviso',
+      'Selecione as despesas a serem reportadas'
+    );
+  }
+
+  function handleReport() {
+    //TODO: percorrer listagem de despesas
+    //      e verificar se alguma foi marcada
+    //      se sim, enviar o report
+    //      se não, avisar que não tem despesa marcada
+    Alert.alert(
+      'Aviso',
+      'Selecione as despesas a serem reportadas'
+    );
+  }
+
   return (
     <Container>
       <Header>Detalhes</Header>
-      {
-        loading
-          ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" />
-          : <></>
-      }
-      <FlatList
-        style={{ marginTop: 8 }}
-        data={expenseList}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => (
-          <Expense
-            data={item}
-            onPress={() => { }}
-          />
-        )}
-      />
+      <Content>
+        {
+          loading
+            ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" />
+            : <></>
+        }
+        <FlatList
+          style={{ marginTop: 8 }}
+          data={expenseList}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={item => String(item.id)}
+          renderItem={({ item }) => (
+            <ExpenseReport
+              data={item}
+              onPress={() => { }}
+            />
+          )}
+        />
+        <View style={{ flexDirection: 'row' }}>
+          <Button style={{ flex: 1 }} onPress={handleClose} loading={false}>Finalizar</Button>
+          <Button style={{ flex: 1, backgroundColor: '#dad' }} onPress={handleReport} loading={false}>Reportar</Button>
+        </View>
+      </Content>
     </Container>
   );
 }

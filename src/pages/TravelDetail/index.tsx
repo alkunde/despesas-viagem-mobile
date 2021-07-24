@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState } from 'react';
-import { SafeAreaView, ScrollView, Keyboard, Alert } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { ScrollView, Keyboard, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -30,8 +30,6 @@ interface TravelFormData {
 
 const TravelDetail: React.FC = () => {
   const { user } = useAuth();
-  const route = useRoute();
-  const routeParams = route.params as RouteParams;
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);
@@ -87,7 +85,7 @@ const TravelDetail: React.FC = () => {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <Container>
       <Header>Viagem</Header>
       <Content>
         <ScrollView>
@@ -133,7 +131,7 @@ const TravelDetail: React.FC = () => {
           Cadastrar
         </Button>
       </Content>
-    </SafeAreaView>
+    </Container>
   );
 }
 

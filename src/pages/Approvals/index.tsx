@@ -39,13 +39,19 @@ const Approvals: React.FC = () => {
   }, []);
 
   function handleApprovalDetail(approvalSelected: ApprovalProps) {
-    navigate('ApprovalDetail');
+    const { id } = approvalSelected;
+    navigate('ApprovalDetail', { id });
   }
 
   return (
     <Container>
       <Header>Aprovações</Header>
       <Content>
+        {
+          loading
+            ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" />
+            : <></>
+        }
         <FlatList
           style={{ marginTop: 8 }}
           data={approvalList}

@@ -6,6 +6,7 @@ import Expenses from '../pages/Expenses';
 import Travels from '../pages/Travels';
 import ExpenseDetail from '../pages/ExpenseDetail';
 import TravelDetail from '../pages/TravelDetail';
+import TravelExpenses from '../pages/TravelExpenses';
 import Approvals from '../pages/Approvals';
 import ApprovalDetail from '../pages/ApprovalDetail';
 
@@ -23,6 +24,7 @@ const AppRoutes: React.FC = () => (
     <App.Screen name="ExpenseDetail" component={ExpenseDetail} />
     <App.Screen name="TravelDetail" component={TravelDetail} />
     <App.Screen name="ApprovalDetail" component={ApprovalDetail} />
+    <App.Screen name="TravelExpenses" component={TravelExpenses} />
   </App.Navigator>
 )
 
