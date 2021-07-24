@@ -42,6 +42,7 @@ export const Travel: React.FC<Props> = ({ data, ...rest }) => {
         ? <Text>Adiantamento: {advancedAmount}</Text>
         : <></>
       }
+      <Text>Status: {status}</Text>
     </Container>
   )
 }

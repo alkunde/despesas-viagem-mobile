@@ -5,21 +5,28 @@ import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/nativ
 import api from '../../services/api';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
-import { Expense, ExpenseProps } from '../../components/Expense';
+import { TravelExpense, ExpenseProps } from '../../components/Expense';
+import { TravelProps } from '../../components/Travel';
 
 import { Container, Content } from './styles';
 
+interface RouteParams {
+  travelSelected: TravelProps;
+}
+
 const TravelExpenses: React.FC = () => {
   const route = useRoute();
+  const { travelSelected } = route.params as RouteParams;
+  const title: string = `Relatório: ${travelSelected.id.toString()}`
 
   const [loading, setLoading] = useState(false);
   const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
 
-  const { navigate } = useNavigation();
+  const { navigate, goBack } = useNavigation();
 
   useFocusEffect(
     useCallback(() => {
-      loadExpenses(route.params.id);
+      loadExpenses(travelSelected.id);
     }, [])
   );
 
@@ -29,24 +36,49 @@ const TravelExpenses: React.FC = () => {
       const response = await api.get("/expenses/travel/" + id);
 
       setExpenseList(response.data);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       Alert.alert(
         'Aviso',
         'Falha na conexão'
       );
-    } finally {
-      setLoading(false);
     }
   }, []);
 
   function handleAddExpenses() {
-    //TODO: ExpenseList diferente?
-    navigate("ExpensesToTravel");
+    console.log(travelSelected.status);
+    if (travelSelected.status === 'aberto') {
+      navigate("ExpensesToTravel");
+    } else {
+      Alert.alert(
+        'Aviso',
+        'Relatório não está disponível para alteração'
+      );
+    }
   }
 
-  function handleSendTravel() {
+  async function handleSendTravel() {
+    if (travelSelected.status !== 'aberto') {
+      Alert.alert(
+        'Aviso',
+        'Relatório já foi enviado'
+      );
+      return;
+    }
+
     if (expenseList && expenseList.length > 0) {
       setLoading(true);
+
+      try {
+        await api.put(`/travels/${travelSelected.id}/to-approval`);
+        goBack();
+      } catch (err) {
+        Alert.alert(
+          'Aviso',
+          'Falha na operação'
+        );
+      }
     } else {
       setLoading(false);
       Alert.alert(
@@ -56,9 +88,30 @@ const TravelExpenses: React.FC = () => {
     }
   }
 
+  async function handleDeleteExpense(item: ExpenseProps) {
+    if (travelSelected.status !== 'aberto') {
+      Alert.alert(
+        'Aviso',
+        'Não é possível alterar este relatório'
+      );
+      return;
+    }
+
+    try {
+      const response = await api.put(`/expenses/${item.id}/clear-travel`);
+      console.log(response);
+      loadExpenses(travelSelected.id);
+    } catch (err) {
+      Alert.alert(
+        'Aviso',
+        'Falha na comunicação'
+      );
+    }
+  }
+
   return (
     <Container>
-      <Header>Despesas</Header>
+      <Header>{title}</Header>
       <Content>
         <View style={{ flexDirection: 'row' }}>
           <Button style={{ flex: 1 }} onPress={handleAddExpenses} loading={false}>Adicionar</Button>
@@ -70,9 +123,9 @@ const TravelExpenses: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
-            <Expense
+            <TravelExpense
               data={item}
-              onPress={() => { }}
+              onPress={() => handleDeleteExpense(item)}
             />
           )}
         />
