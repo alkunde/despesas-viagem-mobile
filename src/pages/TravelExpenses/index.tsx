@@ -4,22 +4,25 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import Header from '../../components/Header';
 import Button from '../../components/Button';
+import { Expense, ExpenseProps } from '../../components/Expense';
 
 import { Container, Content } from './styles';
 
 const TravelExpenses: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
+
   const { navigate } = useNavigation();
 
   useEffect(() => {
     if (loading) {
 
     }
-  },
-    [loading]);
+  }, [loading]);
+
   function handleAddExpenses() {
     //TODO: ExpenseList diferente?
-    navigate("ExpenseDetail");
+    navigate("ExpensesToTravel");
   }
 
   function handleSendTravel() {
