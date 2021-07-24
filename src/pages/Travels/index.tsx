@@ -35,7 +35,8 @@ const Travels: React.FC = () => {
   }, []);
 
   function handleTravelExpenses(travelSelected: TravelProps) {
-    navigate("TravelExpenses", { travelSelected });
+    const { id } = travelSelected;
+    navigate("TravelExpenses", { id });
   }
 
   function handleTravelDetail() {
