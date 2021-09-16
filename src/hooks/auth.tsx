@@ -44,19 +44,21 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post('sessions', {
-      email,
-      password,
-    });
+    // TODO:
+    // const response = await api.post('sessions', {
+    //   email,
+    //   password,
+    // });
 
-    const { token, user } = response.data;
+    // const { token, user } = response.data;
 
-    await AsyncStorage.multiSet([
-      ['@DespesasViagem:token', token],
-      ['@DespesasViagem:user', JSON.stringify(user)],
-    ]);
+    // await AsyncStorage.multiSet([
+    //   ['@DespesasViagem:token', token],
+    //   ['@DespesasViagem:user', JSON.stringify(user)],
+    // ]);
 
-    setData({ token, user });
+    // setData({ token, user });
+    setData({token: 'abcd-1234', user: {name: 'André'}});
   }, []);
 
   const signOut = useCallback(async () => {

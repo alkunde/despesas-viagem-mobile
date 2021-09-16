@@ -1,19 +1,27 @@
 import React, { useState, useCallback } from 'react';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { FlatList, Alert, ActivityIndicator } from 'react-native';
 
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { Expense, ExpenseProps } from '../../components/Expense';
+import { TravelProps } from '../../components/Travel';
 import api from '../../services/api';
 
 import { Container, Content } from './styles';
 
+interface RouteParams {
+  travelSelected: TravelProps;
+}
+
 const ExpensesToTravel: React.FC = () => {
+  const route = useRoute();
+  const routeParams = route.params as RouteParams;
+
   const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const { navigate } = useNavigation();
+  const { goBack } = useNavigation();
 
   useFocusEffect(
     useCallback(() => {
@@ -37,13 +45,21 @@ const ExpensesToTravel: React.FC = () => {
     }
   }, []);
 
-  function handleExpenseDetail(expenseSelected: ExpenseProps) {
-    navigate("ExpenseDetail", { expenseSelected });
+  async function handleExpenseDetail(expenseSelected: ExpenseProps) {
+    try {
+      await api.put(`/expenses/${expenseSelected.id}/travel/${routeParams.travelSelected.id}`);
+      goBack();
+    } catch (err) {
+      Alert.alert(
+        'Aviso',
+        'Falha na comunicação'
+      );
+    }
   }
 
   return (
     <Container>
-      <Header>Despesas</Header>
+      <Header>Selecionar Despesa</Header>
       <Content>
         <Button
           loading={false}

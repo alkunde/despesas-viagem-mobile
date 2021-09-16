@@ -47,9 +47,8 @@ const TravelExpenses: React.FC = () => {
   }, []);
 
   function handleAddExpenses() {
-    console.log(travelSelected.status);
     if (travelSelected.status === 'aberto') {
-      navigate("ExpensesToTravel");
+      navigate("ExpensesToTravel", { travelSelected });
     } else {
       Alert.alert(
         'Aviso',
@@ -72,7 +71,14 @@ const TravelExpenses: React.FC = () => {
 
       try {
         await api.put(`/travels/${travelSelected.id}/to-approval`);
-        goBack();
+
+        Alert.alert(
+          'Sucesso',
+          'Relatório enviado com sucesso',
+          [
+            { text: "OK", onPress: () => goBack() }
+          ]
+        );
       } catch (err) {
         Alert.alert(
           'Aviso',

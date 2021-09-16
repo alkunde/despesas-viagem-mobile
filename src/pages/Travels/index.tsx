@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { View, Image, Text, FlatList, ActivityIndicator } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { FlatList, ActivityIndicator } from 'react-native';
 
 import Header from '../../components/Header';
 import Button from '../../components/Button';
+import ServerDown from '../../components/ServerDown';
 import { Travel, TravelProps } from '../../components/Travel';
 import api from '../../services/api';
 
 import { Container, Content } from './styles';
-
-import serverDown from '../../assets/server_down.png';
 
 const Travels: React.FC = () => {
   const [travelList, setTravelList] = useState<TravelProps[]>([]);
@@ -48,14 +47,7 @@ const Travels: React.FC = () => {
       <Content>
         <Button loading={false} onPress={() => handleTravelDetail()}>Nova viagem</Button>
         {loading ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> : <></>}
-        {error ? (
-          <View style={{ flex: 1, alignItems: 'center', marginTop: 50 }}>
-            <Image source={serverDown} />
-            <Text style={{ color: '#fff', fontSize: 18 }}>Problema de comunicação</Text>
-          </View>
-        )
-          : <></>
-        }
+        {error ? <ServerDown /> : <></>}
         {!loading && !error ? (
           <FlatList
             style={{ marginTop: 8 }}
