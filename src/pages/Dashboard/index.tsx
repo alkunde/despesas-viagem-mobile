@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Alert } from 'react-native';
+import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { useAuth } from '../../hooks/auth';
@@ -21,6 +21,7 @@ const Dashboard: React.FC = () => {
   }
 
   function handleConfigureNavigation() {
+    console.log(user);
     navigate('SettingsScreen')
   }
 

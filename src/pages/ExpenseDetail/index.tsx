@@ -42,6 +42,9 @@ interface ExpenseFormData {
   amount: number;
   category: CategoryProps;
   expenseDate: Date;
+  day: number;
+  month: number;
+  year: number;
   user?: object;
 }
 
@@ -74,12 +77,13 @@ const ExpenseDetail: React.FC = () => {
       const date = new Date(routeParams.expenseSelected.expenseDate);
       const { expenseSelected } = routeParams;
 
+      console.log(date.toLocaleDateString("pt-BR"));
+
       formRef.current?.setData({
         description: expenseSelected.description,
         amount: expenseSelected.amount.toString(),
         category: expenseSelected.category.description,
-        expenseDate: expenseSelected.expenseDate
-        // expenseDate: date.toLocaleDateString("pt-BR")
+        expenseDate: date.toLocaleDateString("pt-BR"),
       });
       setCategory(expenseSelected.category);
       setExpenseDate(date);
@@ -89,6 +93,7 @@ const ExpenseDetail: React.FC = () => {
   }, []);
 
   const handleConfirmDate = useCallback((data: Date) => {
+    setExpenseDate(data);
     formRef.current?.setFieldValue('expenseDate', data.toLocaleDateString("pt-BR"));
 
     setShowDatePicker(false);
@@ -101,6 +106,7 @@ const ExpenseDetail: React.FC = () => {
   const handleAddExpense = useCallback(async (data: ExpenseFormData) => {
     try {
       formRef.current?.setErrors({});
+      console.log(data);
 
       const schema = Yup.object().shape({
         description: Yup.string().required('Campo obrigatório'),
@@ -116,15 +122,21 @@ const ExpenseDetail: React.FC = () => {
         abortEarly: false,
       });
 
-      data.user = user;
-      data.expenseDate = expenseDate;
+      data.user = {
+        id: 1,
+        name: 'Patricia',
+        email: 'tissalennert@gmail.com',
+      };
+      data.day = expenseDate.getDate();
+      data.month = expenseDate.getMonth() + 1;
+      data.year = expenseDate.getFullYear();
+      data.category = category;
 
+      console.log(data);
       if (routeParams.expenseSelected.id) {
         data.id = routeParams.expenseSelected.id;
-        data.category = category;
         await api.put('/expenses', data);
       } else {
-        data.category = category;
         await api.post('/expenses', data);
       }
 
@@ -144,6 +156,7 @@ const ExpenseDetail: React.FC = () => {
 
         return;
       }
+      console.log(err);
 
       Alert.alert(
         'Falha de conexão',
@@ -206,6 +219,7 @@ const ExpenseDetail: React.FC = () => {
         headerTextIOS="Selecionar data"
         isVisible={showDatePicker}
         mode="date"
+        date={expenseDate}
         onConfirm={data => handleConfirmDate(data)}
         onCancel={handleCancelDate}
       />

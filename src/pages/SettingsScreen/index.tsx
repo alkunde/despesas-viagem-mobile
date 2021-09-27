@@ -1,9 +1,29 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import Header from '../../components/Header';
+
+import { Container, Button, ButtonText } from './styles';
 
 const SettingsScreen: React.FC = () => {
+  const { navigate } = useNavigation();
+
   return (
-    <View><Text>Settings</Text></View>
+    <Container>
+      <Header>Ajustes</Header>
+      <Button onPress={() => navigate('CategoriesScreen')}>
+        <ButtonText>Categorias</ButtonText>
+      </Button>
+      <Button onPress={() => navigate('CostCenterListScreen')}>
+        <ButtonText>Centros de Custo</ButtonText>
+      </Button>
+      <Button>
+        <ButtonText>Contas Contábeis</ButtonText>
+      </Button>
+      <Button>
+        <ButtonText>Usuários</ButtonText>
+      </Button>
+    </Container>
   )
 }
 
