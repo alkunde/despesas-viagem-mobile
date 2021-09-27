@@ -11,7 +11,6 @@ const Dashboard: React.FC = () => {
   const { navigate } = useNavigation();
 
   const { user, signOut } = useAuth();
-  console.log(user);
 
   function handleExpenseNavigation() {
     navigate('Expenses');
@@ -22,10 +21,7 @@ const Dashboard: React.FC = () => {
   }
 
   function handleConfigureNavigation() {
-    Alert.alert(
-      'Configurações',
-      'Em desenvolvimento'
-    )
+    navigate('SettingsScreen')
   }
 
   function handleApprovalsNavigation() {
@@ -59,17 +55,12 @@ const Dashboard: React.FC = () => {
           </ButtonImage>
           <ButtonText>Ajustes</ButtonText>
         </Button>
-        {user.role === 'admin'
-          ? (
-            <Button onPress={handleApprovalsNavigation}>
-              <ButtonImage>
-                <Icon name="check-square" size={25} color="rgba(255, 255, 255, 0.6)" />
-              </ButtonImage>
-              <ButtonText>Aprovações</ButtonText>
-            </Button>
-          )
-          : <></>
-        }
+        <Button onPress={handleApprovalsNavigation}>
+          <ButtonImage>
+            <Icon name="check-square" size={25} color="rgba(255, 255, 255, 0.6)" />
+          </ButtonImage>
+          <ButtonText>Aprovações</ButtonText>
+        </Button>
       </Container>
       <Container>
         <Button onPress={handleSignOut}>

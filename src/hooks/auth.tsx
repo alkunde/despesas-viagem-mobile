@@ -28,13 +28,10 @@ const AuthProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     async function loadStorageData(): Promise<void> {
-      const [token, user] = await AsyncStorage.multiGet([
-        '@DespesasViagem:token',
-        '@DespesasViagem:user',
-      ]);
+      const user = await AsyncStorage.getItem('@DespesasViagem:user');
 
-      if (token[1] && user[1]) {
-        setData({ token: token[1], user: JSON.parse(user[1]) });
+      if (user) {
+        setData({ token: '', user: JSON.parse(user) });
       }
 
       setLoading(false);

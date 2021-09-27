@@ -1,8 +1,8 @@
-import { Platform } from 'react-native';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: Platform.OS === 'android' ? 'https://2e2172c122f3.ngrok.io' : 'http://localhost:3333',
+  // baseURL: 'https://travelexpenses-api.herokuapp.com',
+  baseURL: 'http://192.168.0.109:8080',
 });
 
 export default api;
