@@ -74,21 +74,18 @@ const ExpenseDetail: React.FC = () => {
     loadCategories();
 
     if (routeParams.expenseSelected.id) {
-      const date = new Date(routeParams.expenseSelected.expenseDate);
       const { expenseSelected } = routeParams;
-
-      console.log(date.toLocaleDateString("pt-BR"));
+      setExpenseDate(new Date(expenseSelected.expenseDate));
 
       formRef.current?.setData({
         description: expenseSelected.description,
         amount: expenseSelected.amount.toString(),
         category: expenseSelected.category.description,
-        expenseDate: date.toLocaleDateString("pt-BR"),
+        expenseDate: expenseDate.toLocaleDateString('pt-BR'),
       });
       setCategory(expenseSelected.category);
-      setExpenseDate(date);
     } else {
-      formRef.current?.setFieldValue('expenseDate', expenseDate.toLocaleDateString("pt-BR"))
+      formRef.current?.setFieldValue('expenseDate', expenseDate.toLocaleDateString('pt-BR'))
     }
   }, []);
 
@@ -104,9 +101,10 @@ const ExpenseDetail: React.FC = () => {
   }, []);
 
   const handleAddExpense = useCallback(async (data: ExpenseFormData) => {
+    if (loading) return;
+
     try {
       formRef.current?.setErrors({});
-      console.log(data);
 
       const schema = Yup.object().shape({
         description: Yup.string().required('Campo obrigatório'),
@@ -122,27 +120,22 @@ const ExpenseDetail: React.FC = () => {
         abortEarly: false,
       });
 
-      data.user = {
-        id: 1,
-        name: 'Patricia',
-        email: 'tissalennert@gmail.com',
-      };
+      data.user = user;
       data.day = expenseDate.getDate();
       data.month = expenseDate.getMonth() + 1;
       data.year = expenseDate.getFullYear();
       data.category = category;
 
-      console.log(data);
       if (routeParams.expenseSelected.id) {
         data.id = routeParams.expenseSelected.id;
-        await api.put('/expenses', data);
+        await api.put(`/expenses/${data.id}`, data);
       } else {
         await api.post('/expenses', data);
       }
 
       Alert.alert(
-        'Cadastro realizado com sucesso!',
-        'Você já pode fazer login',
+        'Sucesso',
+        'Despesa cadastrada!',
       );
 
       navigation.goBack();
@@ -156,7 +149,6 @@ const ExpenseDetail: React.FC = () => {
 
         return;
       }
-      console.log(err);
 
       Alert.alert(
         'Falha de conexão',

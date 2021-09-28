@@ -35,6 +35,8 @@ const SignIn: React.FC = () => {
 
   const handleSignIn = useCallback(
     async (data: SignInFormData) => {
+      if (loading) return;
+
       try {
         formRef.current?.setErrors({});
 

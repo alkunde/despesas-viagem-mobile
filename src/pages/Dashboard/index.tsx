@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { useAuth } from '../../hooks/auth';
@@ -21,11 +21,20 @@ const Dashboard: React.FC = () => {
   }
 
   function handleConfigureNavigation() {
-    console.log(user);
+    if (!user.isAdmin) {
+      Alert.alert('Aviso', 'Função habilitada apenas para administradores');
+      return;
+    }
+
     navigate('SettingsScreen')
   }
 
   function handleApprovalsNavigation() {
+    if (!user.isAdmin) {
+      Alert.alert('Aviso', 'Função habilitada apenas para administradores');
+      return;
+    }
+
     navigate('Approvals')
   }
 

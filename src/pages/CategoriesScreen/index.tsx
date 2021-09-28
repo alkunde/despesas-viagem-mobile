@@ -45,7 +45,7 @@ const CategoriesScreen: React.FC = () => {
     <Container>
       <Header>Categorias</Header>
       <Content>
-        <Button loading={false} onPress={() => navigate('CategoryDetail')}>
+        <Button loading={false} onPress={() => handleCategoryDetail({} as CategoryProps)}>
           Nova Categoria
         </Button>
         {

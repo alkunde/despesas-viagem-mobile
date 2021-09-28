@@ -6,12 +6,14 @@ import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { Expense, ExpenseProps } from '../../components/Expense';
 import api from '../../services/api';
+import { useAuth } from '../../hooks/auth';
 
 import { Container, Content } from './styles';
 
 const Expenses: React.FC = () => {
   const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   const { navigate } = useNavigation();
 
@@ -24,7 +26,8 @@ const Expenses: React.FC = () => {
   const loadExpenses = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await api.get("/expenses");
+      const { id } = user;
+      const response = await api.get(`/expenses/users/${id}`);
 
       setExpenseList(response.data);
       setLoading(false);

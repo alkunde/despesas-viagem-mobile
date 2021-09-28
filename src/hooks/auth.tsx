@@ -8,13 +8,20 @@ interface SignInCredentials {
   password: string;
 }
 
+interface UserLogged {
+  id: number;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+}
+
 interface AuthState {
   token: string;
-  user: object;
+  user: UserLogged;
 }
 
 interface AuthContextData {
-  user: object;
+  user: UserLogged;
   loading: boolean;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
@@ -41,21 +48,20 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
-    // TODO:
-    // const response = await api.post('sessions', {
-    //   email,
-    //   password,
-    // });
+    const response = await api.post('session', {
+      email,
+      password,
+    });
 
-    // const { token, user } = response.data;
+    const user = response.data;
+    const token = 'abcd-1234';
 
-    // await AsyncStorage.multiSet([
-    //   ['@DespesasViagem:token', token],
-    //   ['@DespesasViagem:user', JSON.stringify(user)],
-    // ]);
+    await AsyncStorage.multiSet([
+      ['@DespesasViagem:token', token],
+      ['@DespesasViagem:user', JSON.stringify(user)],
+    ]);
 
-    // setData({ token, user });
-    setData({token: 'abcd-1234', user: {name: 'André'}});
+    setData({ token, user });
   }, []);
 
   const signOut = useCallback(async () => {

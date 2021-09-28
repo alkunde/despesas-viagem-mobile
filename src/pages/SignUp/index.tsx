@@ -30,6 +30,8 @@ const SignUp: React.FC = () => {
 
   const handleSignUp = useCallback(async (data: SignUpFormData) => {
     try {
+      if (loading) return;
+
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
