@@ -24,7 +24,7 @@ export type ExpenseProps = {
   description: string;
   category: CategoryProps;
   user: object;
-  travel: TravelProps
+  travel: TravelProps;
 }
 
 type Props = RectButtonProps & {

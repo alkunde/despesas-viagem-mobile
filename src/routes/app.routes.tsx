@@ -14,6 +14,7 @@ import SettingsScreen from '../pages/SettingsScreen';
 import CategoriesScreen from '../pages/CategoriesScreen';
 import CategoryDetail from '../pages/CategoryDetail';
 import CostCenterListScreen from '../pages/CostCenterListScreen';
+import UserListScreen from '../pages/UserListScreen';
 
 const App = createStackNavigator();
 
@@ -35,6 +36,7 @@ const AppRoutes: React.FC = () => (
     <App.Screen name="CategoriesScreen" component={CategoriesScreen} />
     <App.Screen name="CategoryDetail" component={CategoryDetail} />
     <App.Screen name="CostCenterListScreen" component={CostCenterListScreen} />
+    <App.Screen name="UserListScreen" component={UserListScreen} />
   </App.Navigator>
 )
 

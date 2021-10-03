@@ -24,7 +24,7 @@ const CategoriesScreen: React.FC = () => {
   const loadCategories = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await api.get("/categories");
+      const response = await api.get('/categories');
 
       setCategoryList(response.data);
       setLoading(false);

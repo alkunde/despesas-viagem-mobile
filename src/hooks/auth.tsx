@@ -12,7 +12,8 @@ interface UserLogged {
   id: number;
   name: string;
   email: string;
-  isAdmin: boolean;
+  admin: boolean;
+  active: boolean;
 }
 
 interface AuthState {

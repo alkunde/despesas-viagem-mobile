@@ -3,6 +3,7 @@ import { ScrollView, Keyboard, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as Yup from 'yup';
 
 import api from '../../services/api';
@@ -22,7 +23,13 @@ interface TravelFormData {
   origin: string;
   destination: string;
   departureDate: Date;
+  departureYear: number;
+  departureMonth: number;
+  departureDay: number;
   arrivalDate: Date;
+  arrivalYear: number;
+  arrivalMonth: number;
+  arrivalDay: number;
   reason: string;
   advancedAmount: number;
   user?: object;
@@ -33,19 +40,32 @@ const TravelDetail: React.FC = () => {
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);
+  const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
+  const [showArrivalDatePicker, setShowArrivalDatePicker] = useState(false);
+  const [departureDate, setDepartureDate] = useState(new Date());
+  const [arrivalDate, setArrivalDate] = useState(new Date());
 
   const formRef = useRef<FormHandles>(null);
 
   const handleAddTravel = useCallback(async (data: TravelFormData) => {
+    console.log(`departure ${departureDate}`);
+    console.log(`arrival ${arrivalDate}`);
+    if (departureDate > arrivalDate) {
+      console.log('entrou');
+      formRef.current?.setFieldError('departureDate', 'Data de partida não pode ser maior');
+      return;
+    }
+
     try {
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
         origin: Yup.string().required('Campo obrigatório'),
         destination: Yup.string().required('Campo obrigatório'),
-        departureDate: Yup.date().required('Campo obrigatório'),
-        arrivalDate: Yup.date().required('Campo obrigatório'),
+        // departureDate: Yup.date().required('Campo obrigatório'),
+        // arrivalDate: Yup.date().required('Campo obrigatório'),
         reason: Yup.string().required('Campo obrigatório'),
+        // advancedAmount: Yup.number(),
       });
 
       Keyboard.dismiss();
@@ -56,9 +76,13 @@ const TravelDetail: React.FC = () => {
       });
 
       data.user = user;
-      data.arrivalDate = new Date();
-      data.departureDate = new Date();
       data.advancedAmount = 0;
+      data.departureYear = departureDate.getFullYear();
+      data.departureMonth = departureDate.getMonth() + 1;
+      data.departureDay = departureDate.getDate();
+      data.arrivalYear = arrivalDate.getFullYear();
+      data.arrivalMonth = arrivalDate.getMonth() + 1;
+      data.arrivalDay = arrivalDate.getDate();
 
       await api.post('/travels', data);
 
@@ -71,6 +95,7 @@ const TravelDetail: React.FC = () => {
       setLoading(false);
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
+        console.log(errors);
 
         formRef.current?.setErrors(errors);
 
@@ -83,6 +108,28 @@ const TravelDetail: React.FC = () => {
       );
     }
   }, [navigation]);
+
+  const handleCancelDepartureDate = useCallback(() => {
+    setShowDepartureDatePicker(false);
+  }, []);
+
+  const handleCancelArrivalDate = useCallback(() => {
+    setShowArrivalDatePicker(false);
+  }, []);
+
+  const handleConfirmDepartureDate = useCallback((data) => {
+    setDepartureDate(data);
+    formRef.current?.setFieldValue('departureDate', data.toLocaleDateString('pt-BR'));
+
+    setShowDepartureDatePicker(false);
+  }, []);
+
+  const handleConfirmArrivalDate = useCallback((data) => {
+    setArrivalDate(data);
+    formRef.current?.setFieldValue('arrivalDate', data.toLocaleDateString('pt-BR'));
+
+    setShowArrivalDatePicker(false);
+  }, []);
 
   return (
     <Container>
@@ -103,12 +150,14 @@ const TravelDetail: React.FC = () => {
               returnKeyType="next"
             />
             <Input
-              name="arrivalDate"
+              name="departureDate"
               placeholder="Informe a data de partida"
+              onPressIn={() => setShowDepartureDatePicker(true)}
             />
             <Input
-              name="departureDate"
+              name="arrivalDate"
               placeholder="Informe a data de chegada"
+              onPressIn={() => setShowArrivalDatePicker(true)}
             />
             <Input
               autoCapitalize="sentences"
@@ -120,7 +169,7 @@ const TravelDetail: React.FC = () => {
               keyboardType="decimal-pad"
               name="advancedAmount"
               placeholder="Informe o valor adiantado"
-              returnKeyType="next"
+              returnKeyType="done"
             />
           </Form>
         </ScrollView>
@@ -131,6 +180,27 @@ const TravelDetail: React.FC = () => {
           Cadastrar
         </Button>
       </Content>
+
+      <DateTimePickerModal
+        cancelTextIOS="Cancelar"
+        confirmTextIOS="Confirmar"
+        isVisible={showDepartureDatePicker}
+        mode="date"
+        date={departureDate}
+        onConfirm={data => handleConfirmDepartureDate(data)}
+        onCancel={handleCancelDepartureDate}
+      />
+
+      <DateTimePickerModal
+        cancelTextIOS="Cancelar"
+        confirmTextIOS="Confirmar"
+        isVisible={showArrivalDatePicker}
+        mode="date"
+        date={arrivalDate}
+        onConfirm={data => handleConfirmArrivalDate(data)}
+        onCancel={handleCancelArrivalDate}
+      />
+
     </Container>
   );
 }

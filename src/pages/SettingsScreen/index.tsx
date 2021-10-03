@@ -20,7 +20,7 @@ const SettingsScreen: React.FC = () => {
       <Button>
         <ButtonText>Contas Contábeis</ButtonText>
       </Button>
-      <Button>
+      <Button onPress={() => navigate('UserListScreen')}>
         <ButtonText>Usuários</ButtonText>
       </Button>
     </Container>
