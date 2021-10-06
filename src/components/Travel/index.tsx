@@ -1,12 +1,12 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { RectButtonProps } from 'react-native-gesture-handler';
 
-import { Container } from './styles';
+import { Container, Content, StatusFlag } from './styles';
 
 export type TravelProps = {
   id: number;
-  advancedAmount?: number;
+  amount?: number;
   arrivalDate: Date;
   departureDate: Date;
   destination: string;
@@ -27,22 +27,32 @@ export const Travel: React.FC<Props> = ({ data, ...rest }) => {
     destination,
     arrivalDate,
     reason,
-    advancedAmount,
+    amount,
     status
   } = data;
 
+  const amountFormatted = amount?.toLocaleString(
+    'pt-BR',
+    { style: 'currency', currency: 'BRL' },
+  );
+
+  console.log(amountFormatted);
+
   return (
     <Container {...rest}>
-      <Text>Origem: {origin}</Text>
-      <Text>Data Saída: {departureDate}</Text>
-      <Text>Destino: {destination}</Text>
-      <Text>Data Retorno: {arrivalDate}</Text>
-      <Text>Motivo: {reason}</Text>
-      {advancedAmount && advancedAmount > 0
-        ? <Text>Adiantamento: {advancedAmount}</Text>
-        : <></>
-      }
-      <Text>Status: {status}</Text>
+      <Content>
+        <Text>Origem: {origin}</Text>
+        <Text>Data Saída: {departureDate}</Text>
+        <Text>Destino: {destination}</Text>
+        <Text>Data Retorno: {arrivalDate}</Text>
+        <Text>Motivo: {reason}</Text>
+        { amount && amount > 0 && <Text>Adiantamento: {amountFormatted}</Text> }
+      </Content>
+      <View>
+        <StatusFlag>
+          <Text>{status}</Text>
+        </StatusFlag>
+      </View>
     </Container>
   )
 }

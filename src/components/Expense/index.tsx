@@ -32,13 +32,25 @@ type Props = RectButtonProps & {
 }
 
 export const Expense: React.FC<Props> = ({ data, ...rest }) => {
+  const {
+    description,
+    expenseDate,
+    category,
+    travel
+  } = data;
+
+  const amountFormatted = data.amount.toLocaleString(
+    'pt-BR',
+    { style: 'currency', currency: 'BRL' },
+  );
+
   return (
     <Container {...rest}>
-      <DescriptionText>Descrição: {data.description}</DescriptionText>
-      <AmountText>Valor: {data.amount}</AmountText>
-      <DateText>Data: {data.expenseDate}</DateText>
-      <CategoryText>Categoria: {data.category.description}</CategoryText>
-      {data.travel ? <Text>Viagem: {data.travel.id}</Text> : <></>}
+      <DescriptionText>Descrição: {description}</DescriptionText>
+      <AmountText>Valor: {amountFormatted}</AmountText>
+      <DateText>Data: {expenseDate}</DateText>
+      <CategoryText>Categoria: {category.description}</CategoryText>
+      { travel && <Text>Viagem: {travel.id}</Text> }
     </Container>
   );
 }

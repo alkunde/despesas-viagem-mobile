@@ -91,7 +91,7 @@ const ExpenseDetail: React.FC = () => {
 
   const handleConfirmDate = useCallback((data: Date) => {
     setExpenseDate(data);
-    formRef.current?.setFieldValue('expenseDate', data.toLocaleDateString("pt-BR"));
+    formRef.current?.setFieldValue('expenseDate', data.toLocaleDateString('pt-BR'));
 
     setShowDatePicker(false);
   }, []);

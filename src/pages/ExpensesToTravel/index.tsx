@@ -47,7 +47,7 @@ const ExpensesToTravel: React.FC = () => {
 
   async function handleExpenseDetail(expenseSelected: ExpenseProps) {
     try {
-      await api.put(`/expenses/${expenseSelected.id}/travel/${routeParams.travelSelected.id}`);
+      await api.patch(`/expenses/${expenseSelected.id}/travel/${routeParams.travelSelected.id}`);
       goBack();
     } catch (err) {
       Alert.alert(

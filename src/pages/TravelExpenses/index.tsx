@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, FlatList, Alert } from 'react-native';
+import { View, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 
 import api from '../../services/api';
@@ -33,7 +33,7 @@ const TravelExpenses: React.FC = () => {
   const loadExpenses = useCallback(async (id) => {
     try {
       setLoading(true);
-      const response = await api.get("/expenses/travel/" + id);
+      const response = await api.get("/travel/" + id);
 
       setExpenseList(response.data);
       setLoading(false);
@@ -70,7 +70,7 @@ const TravelExpenses: React.FC = () => {
       setLoading(true);
 
       try {
-        await api.put(`/travels/${travelSelected.id}/to-approval`);
+        await api.put(`/travel/${travelSelected.id}/to-approval`);
 
         Alert.alert(
           'Sucesso',
@@ -121,8 +121,12 @@ const TravelExpenses: React.FC = () => {
       <Content>
         <View style={{ flexDirection: 'row' }}>
           <Button style={{ flex: 1 }} onPress={handleAddExpenses} loading={false}>Adicionar</Button>
-          <Button style={{ flex: 1 }} onPress={handleSendTravel} loading={loading}>Enviar</Button>
+          <Button style={{ flex: 1 }} onPress={handleSendTravel} loading={false}>Enviar</Button>
         </View>
+        {loading
+          ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" />
+          : <></>
+        }
         <FlatList
           style={{ marginTop: 8 }}
           data={expenseList}
