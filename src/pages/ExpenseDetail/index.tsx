@@ -134,9 +134,7 @@ const ExpenseDetail: React.FC = () => {
 
       const schema = Yup.object().shape({
         description: Yup.string().required('Campo obrigatório'),
-        // amount: Yup.number().min(0.01).required('Campo obrigatório'),
         category: Yup.string().required('Campo obrigatório'),
-        // expenseDate: Yup.date().max(new Date()).required('Data não pode ser futura'),
       });
 
       Keyboard.dismiss();
