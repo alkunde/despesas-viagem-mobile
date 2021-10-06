@@ -36,7 +36,7 @@ export const Expense: React.FC<Props> = ({ data, ...rest }) => {
     description,
     expenseDate,
     category,
-    travel
+    travel,
   } = data;
 
   const amountFormatted = data.amount.toLocaleString(
@@ -56,13 +56,24 @@ export const Expense: React.FC<Props> = ({ data, ...rest }) => {
 }
 
 export const TravelExpense: React.FC<Props> = ({ data, ...rest }) => {
+  const {
+    description,
+    expenseDate,
+    category,
+  } = data;
+
+  const amountFormatted = data.amount.toLocaleString(
+    'pt-BR',
+    { style: 'currency', currency: 'BRL' },
+  );
+
   return (
     <ContainerWithoutClick>
       <View style={{ flex: 1 }}>
-        <DescriptionText>Descrição: {data.description}</DescriptionText>
-        <AmountText>Valor: {data.amount}</AmountText>
-        <DateText>Data: {data.expenseDate}</DateText>
-        <CategoryText>Categoria: {data.category.description}</CategoryText>
+        <DescriptionText>Descrição: {description}</DescriptionText>
+        <AmountText>Valor: {amountFormatted}</AmountText>
+        <DateText>Data: {expenseDate}</DateText>
+        <CategoryText>Categoria: {category.description}</CategoryText>
       </View>
       <RectButton {...rest} style={{ justifyContent: 'center', padding: 16 }}>
         <Text>Excluir</Text>

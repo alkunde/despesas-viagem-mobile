@@ -20,6 +20,7 @@ const TravelExpenses: React.FC = () => {
   const title: string = `Relatório: ${travelSelected.id.toString()}`
 
   const [loading, setLoading] = useState(false);
+  const [sendLoading, setSendLoading] = useState(false);
   const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
 
   const { navigate, goBack } = useNavigation();
@@ -58,6 +59,8 @@ const TravelExpenses: React.FC = () => {
   }
 
   async function handleSendTravel() {
+    if (sendLoading) return;
+
     if (travelSelected.status !== 'aberto') {
       Alert.alert(
         'Aviso',
@@ -67,10 +70,10 @@ const TravelExpenses: React.FC = () => {
     }
 
     if (expenseList && expenseList.length > 0) {
-      setLoading(true);
+      setSendLoading(true);
 
       try {
-        await api.put(`/travel/${travelSelected.id}/to-approval`);
+        await api.put(`/travels/${travelSelected.id}/to-approval`);
 
         Alert.alert(
           'Sucesso',
@@ -82,11 +85,14 @@ const TravelExpenses: React.FC = () => {
       } catch (err) {
         Alert.alert(
           'Aviso',
-          'Falha na operação'
+          'Falha na operação',
+          [
+            { text: "OK", onPress: () => setSendLoading(false) }
+          ]
         );
       }
     } else {
-      setLoading(false);
+      setSendLoading(false);
       Alert.alert(
         'Aviso',
         'Relatório sem despesas vinculadas'
@@ -104,8 +110,7 @@ const TravelExpenses: React.FC = () => {
     }
 
     try {
-      const response = await api.put(`/expenses/${item.id}/clear-travel`);
-      console.log(response);
+      await api.patch(`/expenses/${item.id}/clear-travel`);
       loadExpenses(travelSelected.id);
     } catch (err) {
       Alert.alert(
@@ -120,13 +125,22 @@ const TravelExpenses: React.FC = () => {
       <Header>{title}</Header>
       <Content>
         <View style={{ flexDirection: 'row' }}>
-          <Button style={{ flex: 1 }} onPress={handleAddExpenses} loading={false}>Adicionar</Button>
-          <Button style={{ flex: 1 }} onPress={handleSendTravel} loading={false}>Enviar</Button>
+          <Button
+            style={{ flex: 1, marginEnd: 8 }}
+            onPress={handleAddExpenses}
+            loading={false}
+          >
+            Adicionar
+          </Button>
+          <Button
+            style={{ flex: 1, marginStart: 8 }}
+            onPress={handleSendTravel}
+            loading={sendLoading}
+          >
+            Enviar
+          </Button>
         </View>
-        {loading
-          ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" />
-          : <></>
-        }
+        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
         <FlatList
           style={{ marginTop: 8 }}
           data={expenseList}

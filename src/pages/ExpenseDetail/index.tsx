@@ -79,14 +79,33 @@ const ExpenseDetail: React.FC = () => {
 
       formRef.current?.setData({
         description: expenseSelected.description,
-        amount: expenseSelected.amount.toString(),
+        amount: toCurrency(expenseSelected.amount),
         category: expenseSelected.category.description,
         expenseDate: expenseDate.toLocaleDateString('pt-BR'),
       });
+      // formRef.current?.setFieldValue('amount', toCurrency(expenseSelected.amount));
       setCategory(expenseSelected.category);
     } else {
       formRef.current?.setFieldValue('expenseDate', expenseDate.toLocaleDateString('pt-BR'))
     }
+  }, []);
+
+  const toCurrency = useCallback((value: number) => {
+    const newNumber = parseFloat(value.toString()).toFixed(2);
+    const str = newNumber.toString().trim().replace(/([^0-9])/g, '');
+    const numero = parseInt(str) / 100;
+
+    return numero.toLocaleString(
+      'pt-BR',
+      { style: 'currency', currency: 'BRL' }
+    );
+  }, []);
+
+  const toFloatNumber = useCallback((value: String) => {
+    const str = value.trim().replace(/([^0-9])/g, '');
+    const numero = parseInt(str) / 100;
+
+    return numero;
   }, []);
 
   const handleConfirmDate = useCallback((data: Date) => {
@@ -103,12 +122,19 @@ const ExpenseDetail: React.FC = () => {
   const handleAddExpense = useCallback(async (data: ExpenseFormData) => {
     if (loading) return;
 
+    const teste = toFloatNumber(formRef.current?.getFieldValue('amount'));
+    if (!teste || teste <= 0) {
+      Keyboard.dismiss();
+      formRef.current?.setFieldError('amount', 'Valor deve ser maior que 0');
+      return;
+    }
+
     try {
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
         description: Yup.string().required('Campo obrigatório'),
-        amount: Yup.number().min(0.01).required('Campo obrigatório'),
+        // amount: Yup.number().min(0.01).required('Campo obrigatório'),
         category: Yup.string().required('Campo obrigatório'),
         // expenseDate: Yup.date().max(new Date()).required('Data não pode ser futura'),
       });
@@ -125,6 +151,7 @@ const ExpenseDetail: React.FC = () => {
       data.month = expenseDate.getMonth() + 1;
       data.year = expenseDate.getFullYear();
       data.category = category;
+      data.amount = toFloatNumber(formRef.current?.getFieldValue('amount'));
 
       if (routeParams.expenseSelected.id) {
         data.id = routeParams.expenseSelected.id;
@@ -142,7 +169,6 @@ const ExpenseDetail: React.FC = () => {
     } catch (err) {
       setLoading(false);
       if (err instanceof Yup.ValidationError) {
-        console.log(err);
         const errors = getValidationErrors(err);
 
         formRef.current?.setErrors(errors);
@@ -156,6 +182,16 @@ const ExpenseDetail: React.FC = () => {
       );
     }
   }, [navigation, category]);
+
+  const changeAmountValue = useCallback((text: String) => {
+    const str = text.toString().trim().replace(/([^0-9])/g, '');
+    const numero = parseInt(str) / 100;
+    const converted = numero.toLocaleString(
+      'pt-BR',
+      { style: 'currency', currency: 'BRL' }
+    );
+    formRef.current?.setFieldValue('amount', converted);
+  }, []);
 
   const handleItemSelected = useCallback((item: CategoryProps) => {
     formRef.current?.setFieldValue('category', item.description);
@@ -180,6 +216,7 @@ const ExpenseDetail: React.FC = () => {
               ref={amountRef}
               keyboardType="numeric"
               name="amount"
+              onChangeText={text => changeAmountValue(text)}
               placeholder="Informe o valor"
               returnKeyType="next"
               onSubmitEditing={() => Keyboard.dismiss()}
@@ -201,7 +238,7 @@ const ExpenseDetail: React.FC = () => {
           loading={loading}
           onPress={() => formRef.current?.submitForm()}
         >
-          Cadastrar
+          Salvar
         </Button>
       </Content>
 
