@@ -1,4 +1,4 @@
-package com.despesasviagem;
+package br.ufpr.andrekunde.travelexpenses;
 
 import com.facebook.react.ReactActivity;
 
