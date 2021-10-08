@@ -55,11 +55,9 @@ const CostCenterDetail: React.FC = () => {
       });
 
       if (routeParams.costCenterSelected.id) {
-        const response = await api.put(`/cost_centers/${routeParams.costCenterSelected.id}`, data);
-        console.log(response);
+        await api.put(`/cost_centers/${routeParams.costCenterSelected.id}`, data);
       } else {
-        const teste = await api.post('/cost_centers', data);
-        console.log(teste);
+        await api.post('/cost_centers', data);
       }
 
       Alert.alert(

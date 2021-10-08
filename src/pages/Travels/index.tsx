@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { FlatList, ActivityIndicator } from 'react-native';
 
+import { useAuth } from '../../hooks/auth';
+import api from '../../services/api';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import ServerDown from '../../components/ServerDown';
 import { Travel, TravelProps } from '../../components/Travel';
-import api from '../../services/api';
 
 import { Container, Content } from './styles';
 
@@ -15,23 +16,27 @@ const Travels: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const { user } = useAuth();
   const { navigate } = useNavigation();
 
-  useEffect(() => {
-    async function getTravels(): Promise<void> {
-      try {
-        const response = await api.get("/travels");
-        console.log(response.data);
+  useFocusEffect(
+    useCallback(() => {
+      loadTravels()
+    }, [])
+  );
 
-        setTravelList(response.data);
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-        setError(true);
-      }
+  const loadTravels = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { id } = user;
+      const response = await api.get(`/travels/users/${id}`);
+
+      setTravelList(response.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      setError(true);
     }
-
-    getTravels();
   }, []);
 
   function handleTravelExpenses(travelSelected: TravelProps) {
@@ -47,8 +52,8 @@ const Travels: React.FC = () => {
       <Header>Viagens</Header>
       <Content>
         <Button loading={false} onPress={() => handleTravelDetail()}>Nova viagem</Button>
-        {loading ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> : <></>}
-        {error ? <ServerDown /> : <></>}
+        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
+        { error && <ServerDown /> }
         {!loading && !error ? (
           <FlatList
             style={{ marginTop: 8 }}
