@@ -20,11 +20,8 @@ const User: React.FC<UserProps> = ({ id, name, email, isAdmin, isActive }) => {
     <View>
       <Text>{name}</Text>
       <Text>{email}</Text>
-      {
-        isAdmin
-          ? <Text>Admin</Text>
-          : <></>
-      }
+      { isAdmin && <Text>Admin</Text> }
+      { isActive && <Text>Ativo</Text> }
     </View>
   );
 }

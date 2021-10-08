@@ -10,15 +10,15 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
-import { CategoryProps } from '../../components/Category';
+import { CostCenterProps } from '../../components/CostCenter';
 
 import { Container, Content } from './styles';
 
 interface RouteParams {
-  categorySelected: CategoryProps;
+  costCenterSelected: CostCenterProps;
 }
 
-const CategoryDetail: React.FC = () => {
+const CostCenterDetail: React.FC = () => {
   const route = useRoute();
   const routeParams = route.params as RouteParams;
 
@@ -28,20 +28,22 @@ const CategoryDetail: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (routeParams.categorySelected.id) {
+    if (routeParams.costCenterSelected.id) {
       formRef.current?.setData({
-        description: routeParams.categorySelected.description,
+        code: routeParams.costCenterSelected.code,
+        description: routeParams.costCenterSelected.description,
       });
     }
   }, []);
 
-  const handleAddCategory = useCallback(async (data: CategoryProps) => {
+  const handleAddCostCenter = useCallback(async (data: CostCenterProps) => {
     if (loading) return;
 
     try {
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
+        code: Yup.string().required('Campo obrigatório'),
         description: Yup.string().required('Campo obrigatório'),
       });
 
@@ -52,16 +54,17 @@ const CategoryDetail: React.FC = () => {
         abortEarly: false,
       });
 
-      if (routeParams.categorySelected.id) {
-        data.id = routeParams.categorySelected.id;
-        await api.put('/categories', data);
+      if (routeParams.costCenterSelected.id) {
+        const response = await api.put(`/cost_centers/${routeParams.costCenterSelected.id}`, data);
+        console.log(response);
       } else {
-        await api.post('/categories', data);
+        const teste = await api.post('/cost_centers', data);
+        console.log(teste);
       }
 
       Alert.alert(
         'Sucesso',
-        'Categoria salva!'
+        'Centro de Custo salvo!'
       );
 
       navigation.goBack();
@@ -84,25 +87,31 @@ const CategoryDetail: React.FC = () => {
 
   return (
     <Container>
-      <Header>Categoria</Header>
+      <Header>Centro de Custo</Header>
       <Content>
-        <Form ref={formRef} onSubmit={handleAddCategory}>
+        <Form ref={formRef} onSubmit={handleAddCostCenter}>
+          <Input
+            name="code"
+            keyboardType="number-pad"
+            placeholder="Informe o código"
+            returnKeyType="next"
+          />
           <Input
             autoCapitalize="words"
             name="description"
             placeholder="Informe a descrição"
             returnKeyType="done"
           />
+          <Button
+            loading={loading}
+            onPress={() => formRef.current?.submitForm()}
+          >
+            Salvar
+          </Button>
         </Form>
-        <Button
-          loading={loading}
-          onPress={() => formRef.current?.submitForm()}
-        >
-          Salvar
-        </Button>
       </Content>
     </Container>
   );
 }
 
-export default CategoryDetail;
+export default CostCenterDetail;

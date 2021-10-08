@@ -48,11 +48,7 @@ const CategoriesScreen: React.FC = () => {
         <Button loading={false} onPress={() => handleCategoryDetail({} as CategoryProps)}>
           Nova Categoria
         </Button>
-        {
-          loading
-            ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" />
-            : <></>
-        }
+        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
         <FlatList
           style={{ marginTop: 8 }}
           data={categoryList}

@@ -26,6 +26,7 @@
     "prettier"
   ],
   "rules": {
+    "prettier/prettier": "error",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/jsx-filename-extension": [
@@ -48,8 +49,7 @@
     "@typescript-eslint/no-use-before-define": [
       "error"
     ],
-    "react/react-in-jsx-scope": "off",
-    "prettier/prettier": "error"
+    "react/react-in-jsx-scope": "off"
   },
   "settings": {
     "import/resolver": {
