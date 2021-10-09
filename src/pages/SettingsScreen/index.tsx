@@ -17,7 +17,7 @@ const SettingsScreen: React.FC = () => {
       <Button onPress={() => navigate('CostCenterListScreen')}>
         <ButtonText>Centros de Custo</ButtonText>
       </Button>
-      <Button>
+      <Button onPress={() => navigate('LedgerAccountListScreen')}>
         <ButtonText>Contas Contábeis</ButtonText>
       </Button>
       <Button onPress={() => navigate('UserListScreen')}>

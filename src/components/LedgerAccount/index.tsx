@@ -8,24 +8,22 @@ import {
   Divider
 } from './styles';
 
-export type CostCenterProps = {
+export type LedgerAccountProps = {
   id: number;
   code: string;
   description: string;
 }
 
 type Props = RectButtonProps & {
-  data: CostCenterProps;
+  data: LedgerAccountProps;
 }
 
-const CostCenter: React.FC<Props> = ({ data, ...rest }) => {
+const LedgerAccount: React.FC<Props> = ({ data, ...rest }) => {
   return (
     <Container {...rest}>
       <CodeText>{data.code}</CodeText>
-      <Divider />
-      <DescriptionText>{data.description}</DescriptionText>
     </Container>
   );
 }
 
-export default CostCenter;
+export default LedgerAccount;
