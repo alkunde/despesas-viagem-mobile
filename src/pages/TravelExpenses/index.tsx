@@ -73,7 +73,7 @@ const TravelExpenses: React.FC = () => {
       setSendLoading(true);
 
       try {
-        await api.put(`/travels/${travelSelected.id}/to-approval`);
+        await api.patch(`/travels/${travelSelected.id}/approval`);
 
         Alert.alert(
           'Sucesso',

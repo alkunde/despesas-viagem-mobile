@@ -36,8 +36,6 @@ export const Travel: React.FC<Props> = ({ data, ...rest }) => {
     { style: 'currency', currency: 'BRL' },
   );
 
-  console.log(amountFormatted);
-
   return (
     <Container {...rest}>
       <Content>
