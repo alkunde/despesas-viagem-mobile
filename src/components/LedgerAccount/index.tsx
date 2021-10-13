@@ -1,11 +1,11 @@
 import React from 'react';
+import { View } from 'react-native';
 import { RectButtonProps } from 'react-native-gesture-handler';
 
 import {
   Container,
   CodeText,
   DescriptionText,
-  Divider
 } from './styles';
 
 export type LedgerAccountProps = {
@@ -18,12 +18,12 @@ type Props = RectButtonProps & {
   data: LedgerAccountProps;
 }
 
-const LedgerAccount: React.FC<Props> = ({ data, ...rest }) => {
+export const LedgerAccount: React.FC<Props> = ({ data, ...rest }) => {
   return (
     <Container {...rest}>
       <CodeText>{data.code}</CodeText>
+      <DescriptionText>{data.description}</DescriptionText>
     </Container>
   );
 }
 
-export default LedgerAccount;
