@@ -21,7 +21,7 @@ import {
   HeaderModal,
   BackButton,
   HeaderTitle,
-  ItemList
+  ItemList,
 } from './styles';
 
 import { CategoryProps, ExpenseProps } from '../../components/Expense';
@@ -57,7 +57,7 @@ const ExpenseDetail: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [categories, setCategories] = useState(null);
+  const [categories, setCategories] = useState<CategoryProps[]>([]);
   const [category, setCategory] = useState({} as CategoryProps);
   const [expenseDate, setExpenseDate] = useState(new Date());
 
@@ -221,7 +221,7 @@ const ExpenseDetail: React.FC = () => {
             />
             <Input
               name="category"
-              placeholder="Informe a categoria"
+              placeholder="Selecione a categoria"
               onPressIn={() => setShowPicker(true)}
             />
             <Input
@@ -257,7 +257,8 @@ const ExpenseDetail: React.FC = () => {
         visible={showPicker}
         onRequestClose={() => {
           Alert.alert('Modal is closed');
-        }}>
+        }}
+      >
         <>
           <HeaderModal>
             <BackButton onPress={() => setShowPicker(false)}>
