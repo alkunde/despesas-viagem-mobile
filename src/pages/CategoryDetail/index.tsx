@@ -76,7 +76,6 @@ const CategoryDetail: React.FC = () => {
 
       data.ledgerAccount = ledgerAccount;
 
-      console.log(data);
       if (routeParams.categorySelected.id) {
         data.id = routeParams.categorySelected.id;
         await api.put('/categories', data);
@@ -99,7 +98,6 @@ const CategoryDetail: React.FC = () => {
 
         return;
       }
-      console.log(err);
 
       Alert.alert(
         'Falha de conexão',

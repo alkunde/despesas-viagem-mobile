@@ -1,9 +1,17 @@
-import React, { useRef, useCallback, useState } from 'react';
-import { ScrollView, Keyboard, Alert } from 'react-native';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
+import {
+  ScrollView,
+  TextInput,
+  Keyboard,
+  Alert,
+  Modal,
+  FlatList
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Icon from 'react-native-vector-icons/Feather';
 import * as Yup from 'yup';
 
 import api from '../../services/api';
@@ -12,12 +20,22 @@ import getValidationErrors from '../../utils/getValidationErrors';
 import Header from '../../components/Header';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { TravelProps } from '../../components/Travel';
-import { Container, Content } from './styles';
+import { CostCenterProps } from '../../components/CostCenter';
+// import { TravelProps } from '../../components/Travel';
 
-interface RouteParams {
-  travelSelected: TravelProps;
-}
+import {
+  Container,
+  Content,
+  HeaderModal,
+  HeaderTitle,
+  BackButton,
+  ItemList,
+} from './styles';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+// interface RouteParams {
+//   travelSelected: TravelProps;
+// }
 
 interface TravelFormData {
   origin: string;
@@ -31,7 +49,8 @@ interface TravelFormData {
   arrivalMonth: number;
   arrivalDay: number;
   reason: string;
-  advancedAmount: number;
+  amount: number;
+  costCenter: CostCenterProps;
   user?: object;
 }
 
@@ -42,16 +61,35 @@ const TravelDetail: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
   const [showArrivalDatePicker, setShowArrivalDatePicker] = useState(false);
+  const [costCenters, setCostCenters] = useState<CostCenterProps[]>([]);
+  const [costCenter, setCostCenter] = useState({} as CostCenterProps);
+  const [showPicker, setShowPicker] = useState(false);
   const [departureDate, setDepartureDate] = useState(new Date());
   const [arrivalDate, setArrivalDate] = useState(new Date());
 
   const formRef = useRef<FormHandles>(null);
+  const advancedAmountRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    async function loadCostCenters() {
+      const response = await api.get('/cost_centers');
+
+      setCostCenters(response.data);
+    }
+
+    loadCostCenters();
+  }, []);
+
+  const toFloatNumber = useCallback((value: String) => {
+    const str = value.trim().replace(/([^0-9])/g, '');
+    const numero = parseInt(str) / 100;
+
+    return numero;
+  }, []);
+
 
   const handleAddTravel = useCallback(async (data: TravelFormData) => {
-    console.log(`departure ${departureDate}`);
-    console.log(`arrival ${arrivalDate}`);
     if (departureDate > arrivalDate) {
-      console.log('entrou');
       formRef.current?.setFieldError('departureDate', 'Data de partida não pode ser maior');
       return;
     }
@@ -62,10 +100,10 @@ const TravelDetail: React.FC = () => {
       const schema = Yup.object().shape({
         origin: Yup.string().required('Campo obrigatório'),
         destination: Yup.string().required('Campo obrigatório'),
-        // departureDate: Yup.date().required('Campo obrigatório'),
-        // arrivalDate: Yup.date().required('Campo obrigatório'),
+        arrivalDate: Yup.string().required('Campo obrigatório'),
+        departureDate: Yup.string().required('Campo obrigatório'),
         reason: Yup.string().required('Campo obrigatório'),
-        // advancedAmount: Yup.number(),
+        costCenter: Yup.string().required('Campo obrigatório'),
       });
 
       Keyboard.dismiss();
@@ -76,13 +114,14 @@ const TravelDetail: React.FC = () => {
       });
 
       data.user = user;
-      data.advancedAmount = 0;
+      data.amount = toFloatNumber(formRef.current?.getFieldValue('advancedAmount'));
       data.departureYear = departureDate.getFullYear();
       data.departureMonth = departureDate.getMonth() + 1;
       data.departureDay = departureDate.getDate();
       data.arrivalYear = arrivalDate.getFullYear();
       data.arrivalMonth = arrivalDate.getMonth() + 1;
       data.arrivalDay = arrivalDate.getDate();
+      data.costCenter = costCenter;
 
       await api.post('/travels', data);
 
@@ -95,7 +134,6 @@ const TravelDetail: React.FC = () => {
       setLoading(false);
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
-        console.log(errors);
 
         formRef.current?.setErrors(errors);
 
@@ -107,7 +145,7 @@ const TravelDetail: React.FC = () => {
         'Tente novamente mais tarde',
       );
     }
-  }, [navigation]);
+  }, [navigation, costCenter]);
 
   const handleCancelDepartureDate = useCallback(() => {
     setShowDepartureDatePicker(false);
@@ -129,6 +167,22 @@ const TravelDetail: React.FC = () => {
     formRef.current?.setFieldValue('arrivalDate', data.toLocaleDateString('pt-BR'));
 
     setShowArrivalDatePicker(false);
+  }, []);
+
+  const changeAdvancedAmountValue = useCallback((text: String) => {
+    const str = text.toString().trim().replace(/([^0-9])/g, '');
+    const numero = parseInt(str) / 100;
+    const converted = numero.toLocaleString(
+      'pt-BR',
+      { style: 'currency', currency: 'BRL' }
+    );
+    formRef.current?.setFieldValue('advancedAmount', converted);
+  }, []);
+
+  const handleItemSelected = useCallback((item: CostCenterProps) => {
+    formRef.current?.setFieldValue('costCenter', item.description);
+    setCostCenter(item);
+    setShowPicker(false);
   }, []);
 
   return (
@@ -164,12 +218,21 @@ const TravelDetail: React.FC = () => {
               name="reason"
               placeholder="Informe o motivo"
               returnKeyType="next"
+              onSubmitEditing={() => advancedAmountRef.current?.focus()}
             />
             <Input
-              keyboardType="decimal-pad"
+              ref={advancedAmountRef}
+              keyboardType="numeric"
               name="advancedAmount"
+              onChangeText={text => changeAdvancedAmountValue(text)}
               placeholder="Informe o valor adiantado"
-              returnKeyType="done"
+              returnKeyType="next"
+              onSubmitEditing={() => Keyboard.dismiss()}
+            />
+            <Input
+              name="costCenter"
+              placeholder="Selecione o centro de custo"
+              onPressIn={() => setShowPicker(true)}
             />
           </Form>
         </ScrollView>
@@ -200,6 +263,30 @@ const TravelDetail: React.FC = () => {
         onConfirm={data => handleConfirmArrivalDate(data)}
         onCancel={handleCancelArrivalDate}
       />
+
+      <Modal
+        animationType={"slide"}
+        presentationStyle="formSheet"
+        visible={showPicker}
+      >
+        <>
+          <HeaderModal>
+            <BackButton onPress={() => setShowPicker(false)}>
+              <Icon name="chevron-left" color="#000" size={25} />
+            </BackButton>
+            <HeaderTitle>Centros de custo</HeaderTitle>
+          </HeaderModal>
+          <FlatList
+            data={costCenters}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleItemSelected(item)}>
+                <ItemList>{item.description}</ItemList>
+              </TouchableOpacity>
+            )}
+          />
+        </>
+      </Modal>
 
     </Container>
   );

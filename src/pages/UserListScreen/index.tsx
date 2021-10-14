@@ -23,12 +23,11 @@ const UserListScreen: React.FC = () => {
       setLoading(true);
       const response = await api.get('/users');
 
-      console.log(response.data);
       setUsers(response.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      console.log(err);
+
       Alert.alert(
         'Aviso',
         'Falha na conexão'

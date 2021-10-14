@@ -21,7 +21,6 @@ const Dashboard: React.FC = () => {
   }
 
   function handleConfigureNavigation() {
-    console.log(user);
     if (!user.admin) {
       Alert.alert('Aviso', 'Função habilitada apenas para administradores');
       return;
@@ -31,12 +30,13 @@ const Dashboard: React.FC = () => {
   }
 
   function handleApprovalsNavigation() {
-    if (!user.admin) {
-      Alert.alert('Aviso', 'Função habilitada apenas para administradores');
-      return;
-    }
+    Alert.alert('Aviso', 'Em desenvolvimento');
+    // if (!user.admin) {
+    //   Alert.alert('Aviso', 'Função habilitada apenas para administradores');
+    //   return;
+    // }
 
-    navigate('Approvals')
+    // navigate('Approvals')
   }
 
   function handleSignOut() {
