@@ -13,6 +13,7 @@ import { Container, Content } from './styles';
 const Expenses: React.FC = () => {
   const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
   const { user } = useAuth();
 
   const { navigate } = useNavigation();
@@ -33,6 +34,7 @@ const Expenses: React.FC = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
+      setNetworkError(true);
       Alert.alert(
         'Aviso',
         'Falha na conexão'
@@ -41,6 +43,8 @@ const Expenses: React.FC = () => {
   }, []);
 
   function handleExpenseDetail(expenseSelected: ExpenseProps) {
+    if (networkError) return;
+
     navigate("ExpenseDetail", { expenseSelected });
   }
 

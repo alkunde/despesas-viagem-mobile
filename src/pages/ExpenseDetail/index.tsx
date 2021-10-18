@@ -6,7 +6,7 @@ import {
   TextInput,
   Modal,
   TouchableOpacity,
-  FlatList
+  FlatList,
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
@@ -255,9 +255,6 @@ const ExpenseDetail: React.FC = () => {
         animationType={"slide"}
         presentationStyle="formSheet"
         visible={showPicker}
-        onRequestClose={() => {
-          Alert.alert('Modal is closed');
-        }}
       >
         <>
           <HeaderModal>

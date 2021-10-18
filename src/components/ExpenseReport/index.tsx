@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/Feather';
+
 import { TravelProps } from '../Travel';
 
 import {
@@ -23,7 +25,8 @@ export type ExpenseProps = {
   description: string;
   category: CategoryProps;
   user: object;
-  travel: TravelProps
+  travel: TravelProps;
+  checked: boolean;
 }
 
 type Props = RectButtonProps & {
@@ -31,6 +34,7 @@ type Props = RectButtonProps & {
 }
 
 export const ExpenseReport: React.FC<Props> = ({ data, ...rest }) => {
+
   return (
     <Container>
       <View style={{ flex: 1 }}>
@@ -41,6 +45,7 @@ export const ExpenseReport: React.FC<Props> = ({ data, ...rest }) => {
       </View>
       <View style={{ justifyContent: 'center', margin: 16 }}>
         <RectButton {...rest}>
+          <Icon name="x" size={25} color="#2212AA" />
           <Text>Marcar</Text>
         </RectButton>
       </View>

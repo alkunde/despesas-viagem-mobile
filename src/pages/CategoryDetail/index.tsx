@@ -141,9 +141,6 @@ const CategoryDetail: React.FC = () => {
         animationType={"slide"}
         presentationStyle="formSheet"
         visible={showPicker}
-        onRequestClose={() => {
-          Alert.alert('Modal is closed');
-        }}
       >
         <>
           <HeaderModal>

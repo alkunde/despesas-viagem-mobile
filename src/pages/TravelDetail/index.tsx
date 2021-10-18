@@ -5,7 +5,7 @@ import {
   Keyboard,
   Alert,
   Modal,
-  FlatList
+  FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
@@ -32,10 +32,6 @@ import {
   ItemList,
 } from './styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-// interface RouteParams {
-//   travelSelected: TravelProps;
-// }
 
 interface TravelFormData {
   origin: string;
@@ -189,7 +185,7 @@ const TravelDetail: React.FC = () => {
     <Container>
       <Header>Viagem</Header>
       <Content>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Form ref={formRef} onSubmit={handleAddTravel}>
             <Input
               autoCapitalize="words"
