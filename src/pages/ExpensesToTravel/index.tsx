@@ -2,11 +2,13 @@ import React, { useState, useCallback } from 'react';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { FlatList, Alert, ActivityIndicator } from 'react-native';
 
+import api from '../../services/api';
+
 import Header from '../../components/Header';
-import Button from '../../components/Button';
+import NotFound from '../../components/NotFound';
+import ServerDown from '../../components/ServerDown';
 import { Expense, ExpenseProps } from '../../components/Expense';
 import { TravelProps } from '../../components/Travel';
-import api from '../../services/api';
 
 import { Container, Content } from './styles';
 
@@ -18,8 +20,9 @@ const ExpensesToTravel: React.FC = () => {
   const route = useRoute();
   const routeParams = route.params as RouteParams;
 
-  const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
+  const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
 
   const { goBack } = useNavigation();
 
@@ -38,10 +41,7 @@ const ExpensesToTravel: React.FC = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      Alert.alert(
-        'Aviso',
-        'Falha na conexão'
-      );
+      setNetworkError(true);
     }
   }, []);
 
@@ -61,29 +61,23 @@ const ExpensesToTravel: React.FC = () => {
     <Container>
       <Header>Selecionar Despesa</Header>
       <Content>
-        <Button
-          loading={false}
-          onPress={() => handleExpenseDetail({} as ExpenseProps)}
-        >
-          Nova despesa
-        </Button>
-        {
-          loading
-            ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" />
-            : <></>
+        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
+        { networkError && <ServerDown /> }
+        { !networkError && (!expenseList || expenseList.length ===0) && <NotFound /> }
+        { !loading && !networkError &&
+          <FlatList
+            style={{ marginTop: 8 }}
+            data={expenseList}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => (
+              <Expense
+                data={item}
+                onPress={() => handleExpenseDetail(item)}
+              />
+            )}
+          />
         }
-        <FlatList
-          style={{ marginTop: 8 }}
-          data={expenseList}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <Expense
-              data={item}
-              onPress={() => handleExpenseDetail(item)}
-            />
-          )}
-        />
       </Content>
     </Container>
   );
