@@ -8,7 +8,7 @@ const ServerDown: React.FC = () => {
   return (
     <Container>
       <Image source={serverDown} />
-      <Title>Problema de comunicação</Title>
+      <Title>Falha de conexão</Title>
     </Container>
   );
 }

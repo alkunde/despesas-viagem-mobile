@@ -1,17 +1,21 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { FlatList, ActivityIndicator, Alert } from 'react-native';
+import { FlatList, ActivityIndicator } from 'react-native';
 
-import { Approval, ApprovalProps } from '../../components/Approval';
-import { Travel, TravelProps } from '../../components/Travel';
-import Header from '../../components/Header';
 import api from '../../services/api';
+
+import Header from '../../components/Header';
+import NotFound from '../../components/NotFound';
+import ServerDown from '../../components/ServerDown';
+import { Approval, ApprovalProps } from '../../components/Approval';
+import { TravelProps } from '../../components/Travel';
 
 import { Container, Content } from './styles';
 
 const Approvals: React.FC = () => {
-  const [approvalList, setApprovalList] = useState<TravelProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const [networkError, setNetwortkError] = useState(false);
+  const [approvalList, setApprovalList] = useState<TravelProps[]>([]);
 
   const { navigate } = useNavigation();
 
@@ -28,13 +32,10 @@ const Approvals: React.FC = () => {
       const response = await api.get("/approvals");
 
       setApprovalList(response.data);
-    } catch (err) {
-      Alert.alert(
-        'Aviso',
-        'Falha de conexão'
-      );
-    } finally {
       setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      setNetwortkError(true);
     }
   }, []);
 
@@ -47,23 +48,23 @@ const Approvals: React.FC = () => {
     <Container>
       <Header>Aprovações</Header>
       <Content>
-        {
-          loading
-            ? <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" />
-            : <></>
+        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
+        { networkError && <ServerDown /> }
+        { !networkError && (!approvalList || approvalList.length === 0) && <NotFound /> }
+        { !loading && !networkError &&
+          <FlatList
+            style={{ marginTop: 8 }}
+            data={approvalList}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => (
+              <Approval
+                data={item}
+                onPress={() => handleApprovalDetail(item)}
+              />
+            )}
+          />
         }
-        <FlatList
-          style={{ marginTop: 8 }}
-          data={approvalList}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <Approval
-              data={item}
-              onPress={() => handleApprovalDetail(item)}
-            />
-          )}
-        />
       </Content>
     </Container>
   );

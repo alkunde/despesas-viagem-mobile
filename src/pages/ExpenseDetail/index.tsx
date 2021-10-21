@@ -122,18 +122,12 @@ const ExpenseDetail: React.FC = () => {
   const handleAddExpense = useCallback(async (data: ExpenseFormData) => {
     if (loading) return;
 
-    const teste = toFloatNumber(formRef.current?.getFieldValue('amount'));
-    if (!teste || teste <= 0) {
-      Keyboard.dismiss();
-      formRef.current?.setFieldError('amount', 'Valor deve ser maior que 0');
-      return;
-    }
-
     try {
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
         description: Yup.string().required('Campo obrigatório'),
+        amount: Yup.string().required('Campo obrigatório'),
         category: Yup.string().required('Campo obrigatório'),
       });
 
@@ -143,6 +137,13 @@ const ExpenseDetail: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false,
       });
+
+      const teste = toFloatNumber(formRef.current?.getFieldValue('amount'));
+      if (!teste || teste <= 0) {
+        Keyboard.dismiss();
+        formRef.current?.setFieldError('amount', 'Valor deve ser maior que 0');
+        return;
+      }
 
       data.user = user;
       data.day = expenseDate.getDate();

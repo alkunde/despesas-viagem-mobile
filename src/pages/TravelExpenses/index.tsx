@@ -3,8 +3,11 @@ import { View, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 
 import api from '../../services/api';
+
 import Header from '../../components/Header';
 import Button from '../../components/Button';
+import NotFound from '../../components/NotFound';
+import ServerDown from '../../components/ServerDown';
 import { TravelExpense, ExpenseProps } from '../../components/Expense';
 import { TravelProps } from '../../components/Travel';
 
@@ -20,6 +23,7 @@ const TravelExpenses: React.FC = () => {
   const title: string = `Relatório: ${travelSelected.id.toString()}`
 
   const [loading, setLoading] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
   const [expenseList, setExpenseList] = useState<ExpenseProps[]>([]);
 
@@ -40,15 +44,14 @@ const TravelExpenses: React.FC = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      Alert.alert(
-        'Aviso',
-        'Falha na conexão'
-      );
+      setNetworkError(true);
     }
   }, []);
 
   function handleAddExpenses() {
-    if (travelSelected.status === 'aberto') {
+    if (sendLoading) return;
+
+    if (travelSelected.status === 'aberto' || travelSelected.status === 'reprovado') {
       navigate("ExpensesToTravel", { travelSelected });
     } else {
       Alert.alert(
@@ -61,7 +64,7 @@ const TravelExpenses: React.FC = () => {
   async function handleSendTravel() {
     if (sendLoading) return;
 
-    if (travelSelected.status !== 'aberto') {
+    if (travelSelected.status === 'em aprovação' || travelSelected.status === 'fechado') {
       Alert.alert(
         'Aviso',
         'Relatório já foi enviado'
@@ -93,15 +96,11 @@ const TravelExpenses: React.FC = () => {
       }
     } else {
       setSendLoading(false);
-      Alert.alert(
-        'Aviso',
-        'Relatório sem despesas vinculadas'
-      );
     }
   }
 
   async function handleDeleteExpense(item: ExpenseProps) {
-    if (travelSelected.status !== 'aberto') {
+    if (travelSelected.status === 'fechado' || travelSelected.status === 'em aprovação') {
       Alert.alert(
         'Aviso',
         'Não é possível alterar este relatório'
@@ -115,7 +114,7 @@ const TravelExpenses: React.FC = () => {
     } catch (err) {
       Alert.alert(
         'Aviso',
-        'Falha na comunicação'
+        'Falha na conexão'
       );
     }
   }
@@ -141,18 +140,22 @@ const TravelExpenses: React.FC = () => {
           </Button>
         </View>
         { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        <FlatList
-          style={{ marginTop: 8 }}
-          data={expenseList}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <TravelExpense
-              data={item}
-              onPress={() => handleDeleteExpense(item)}
-            />
-          )}
-        />
+        { networkError && <ServerDown /> }
+        { !networkError && (!expenseList || expenseList.length === 0) && <NotFound /> }
+        { !loading && !networkError &&
+          <FlatList
+            style={{ marginTop: 8 }}
+            data={expenseList}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => (
+              <TravelExpense
+                data={item}
+                onPress={() => handleDeleteExpense(item)}
+              />
+            )}
+          />
+        }
       </Content>
     </Container>
   )

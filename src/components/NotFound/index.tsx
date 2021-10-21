@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text } from 'react-native';
+import { Image } from 'react-native';
 
 import notFound from '../../assets/not_found.png';
 import { Container, Title } from './styles';

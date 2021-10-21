@@ -21,7 +21,6 @@ import Header from '../../components/Header';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { CostCenterProps } from '../../components/CostCenter';
-// import { TravelProps } from '../../components/Travel';
 
 import {
   Container,
@@ -236,7 +235,7 @@ const TravelDetail: React.FC = () => {
           loading={loading}
           onPress={() => formRef.current?.submitForm()}
         >
-          Cadastrar
+          Salvar
         </Button>
       </Content>
 

@@ -112,7 +112,12 @@ const SignUp: React.FC = () => {
               onSubmitEditing={() => formRef.current?.submitForm()}
             />
 
-            <Button loading={loading} onPress={() => formRef.current?.submitForm()}>Cadastrar</Button>
+            <Button
+              loading={loading}
+              onPress={() => formRef.current?.submitForm()}
+            >
+              Salvar
+            </Button>
           </Form>
         </Container>
       </SafeAreaView>

@@ -1,11 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { FlatList, Alert, ActivityIndicator } from 'react-native';
+import { FlatList, ActivityIndicator } from 'react-native';
+
+import api from '../../services/api';
 
 import Header from '../../components/Header';
 import Button from '../../components/Button';
+import NotFound from '../../components/NotFound';
+import ServerDown from '../../components/ServerDown';
 import { Expense, ExpenseProps } from '../../components/Expense';
-import api from '../../services/api';
 import { useAuth } from '../../hooks/auth';
 
 import { Container, Content } from './styles';
@@ -35,10 +38,6 @@ const Expenses: React.FC = () => {
     } catch (err) {
       setLoading(false);
       setNetworkError(true);
-      Alert.alert(
-        'Aviso',
-        'Falha na conexão'
-      );
     }
   }, []);
 
@@ -59,18 +58,22 @@ const Expenses: React.FC = () => {
           Nova despesa
         </Button>
         { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        <FlatList
-          style={{ marginTop: 8 }}
-          data={expenseList}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <Expense
-              data={item}
-              onPress={() => handleExpenseDetail(item)}
-            />
-          )}
-        />
+        { networkError && <ServerDown /> }
+        { !networkError && (!expenseList || expenseList.length === 0) && <NotFound /> }
+        { !networkError && !loading &&
+          <FlatList
+            style={{ marginTop: 8 }}
+            data={expenseList}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }) => (
+              <Expense
+                data={item}
+                onPress={() => handleExpenseDetail(item)}
+              />
+            )}
+          />
+        }
       </Content>
     </Container>
   );

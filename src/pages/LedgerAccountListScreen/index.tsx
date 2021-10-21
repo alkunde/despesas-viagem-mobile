@@ -2,16 +2,20 @@ import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { ActivityIndicator, FlatList, Alert } from 'react-native';
 
+import api from '../../services/api';
+
 import Header from '../../components/Header';
 import Button from '../../components/Button';
+import NotFound from '../../components/NotFound';
+import ServerDown from '../../components/ServerDown';
 import { LedgerAccount, LedgerAccountProps } from '../../components/LedgerAccount';
-import api from '../../services/api';
 
 import { Container, Content } from './styles';
 
 const LedgerAccountListScreen: React.FC = () => {
-  const [ledgerAccountList, setLedgerAccountList] = useState<LedgerAccountProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
+  const [ledgerAccountList, setLedgerAccountList] = useState<LedgerAccountProps[]>([]);
 
   const { navigate } = useNavigation();
 
@@ -30,14 +34,13 @@ const LedgerAccountListScreen: React.FC = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      Alert.alert(
-        'Aviso',
-        'Falha na conexão'
-      );
+      setNetworkError(false);
     }
   }, []);
 
   function handleLedgetAccountDetail(ledgerAccountSelected: LedgerAccountProps) {
+    if (networkError) return;
+
     navigate('LedgerAccountDetail', { ledgerAccountSelected });
   }
 
@@ -52,18 +55,22 @@ const LedgerAccountListScreen: React.FC = () => {
           Nova Conta Contábil
         </Button>
         { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        <FlatList
-          style={{ marginTop: 8 }}
-          data={ledgerAccountList}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => String(item.id)}
-          renderItem={({item}) => (
-            <LedgerAccount
-              data={item}
-              onPress={() => handleLedgetAccountDetail(item)}
-            />
-          )}
-        />
+        { networkError && <ServerDown /> }
+        { !networkError && (!ledgerAccountList || ledgerAccountList.length === 0) && <NotFound /> }
+        { !loading && !networkError &&
+          <FlatList
+            style={{ marginTop: 8 }}
+            data={ledgerAccountList}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => String(item.id)}
+            renderItem={({item}) => (
+              <LedgerAccount
+                data={item}
+                onPress={() => handleLedgetAccountDetail(item)}
+              />
+            )}
+          />
+        }
       </Content>
     </Container>
   )
