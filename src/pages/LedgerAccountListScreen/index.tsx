@@ -34,7 +34,7 @@ const LedgerAccountListScreen: React.FC = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      setNetworkError(false);
+      setNetworkError(true);
     }
   }, []);
 

@@ -100,7 +100,7 @@ const TravelExpenses: React.FC = () => {
   }
 
   async function handleDeleteExpense(item: ExpenseProps) {
-    if (travelSelected.status === 'fechado' || travelSelected.status === 'em aprovação') {
+    if (travelSelected.status === 'aprovado' || travelSelected.status === 'em aprovação') {
       Alert.alert(
         'Aviso',
         'Não é possível alterar este relatório'

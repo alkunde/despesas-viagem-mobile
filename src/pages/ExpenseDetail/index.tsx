@@ -83,7 +83,6 @@ const ExpenseDetail: React.FC = () => {
         category: expenseSelected.category.description,
         expenseDate: expenseDate.toLocaleDateString('pt-BR'),
       });
-      // formRef.current?.setFieldValue('amount', toCurrency(expenseSelected.amount));
       setCategory(expenseSelected.category);
     } else {
       formRef.current?.setFieldValue('expenseDate', expenseDate.toLocaleDateString('pt-BR'))
@@ -142,6 +141,7 @@ const ExpenseDetail: React.FC = () => {
       if (!teste || teste <= 0) {
         Keyboard.dismiss();
         formRef.current?.setFieldError('amount', 'Valor deve ser maior que 0');
+        setLoading(false);
         return;
       }
 

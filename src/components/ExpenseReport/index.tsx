@@ -34,7 +34,6 @@ type Props = RectButtonProps & {
 }
 
 export const ExpenseReport: React.FC<Props> = ({ data, ...rest }) => {
-
   return (
     <Container>
       <View style={{ flex: 1 }}>
@@ -45,7 +44,7 @@ export const ExpenseReport: React.FC<Props> = ({ data, ...rest }) => {
       </View>
       <View style={{ justifyContent: 'center', margin: 16 }}>
         <RectButton {...rest}>
-          <Icon name="x" size={25} color="#2212AA" />
+          <Icon name="x" size={25} color="#2212aa" />
           <Text>Marcar</Text>
         </RectButton>
       </View>
