@@ -139,10 +139,10 @@ const TravelExpenses: React.FC = () => {
             color="#666"
           />
         )}
-        {networkError && <ServerDown />}
-        {!networkError && (!expenseList || expenseList.length === 0) && (
-          <NotFound />
-        )}
+        {!loading && networkError && <ServerDown />}
+        {!loading &&
+          !networkError &&
+          (!expenseList || expenseList.length === 0) && <NotFound />}
         {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}

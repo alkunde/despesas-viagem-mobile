@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { FlatList, ActivityIndicator } from 'react-native';
+import { FlatList, ActivityIndicator, Alert } from 'react-native';
 
 import api from '../../services/api';
 
@@ -44,6 +44,11 @@ const Expenses: React.FC = () => {
   function handleExpenseDetail(expenseSelected: ExpenseProps) {
     if (networkError) return;
 
+    if (expenseSelected.travel.status === 'aprovado') {
+      Alert.alert('Aviso', 'A viagem desta despesa já foi aprovada');
+      return;
+    }
+
     navigate('ExpenseDetail', { expenseSelected });
   }
 
@@ -64,10 +69,10 @@ const Expenses: React.FC = () => {
             color="#666"
           />
         )}
-        {networkError && <ServerDown />}
-        {!networkError && (!expenseList || expenseList.length === 0) && (
-          <NotFound />
-        )}
+        {!loading && networkError && <ServerDown />}
+        {!loading &&
+          !networkError &&
+          (!expenseList || expenseList.length === 0) && <NotFound />}
         {!networkError && !loading && (
           <FlatList
             style={{ marginTop: 8 }}

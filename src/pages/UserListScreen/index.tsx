@@ -55,8 +55,8 @@ const UserListScreen: React.FC = () => {
             color="#666"
           />
         )}
-        {networkError && <ServerDown />}
-        {!loading && !networkError && (
+        {!loading && networkError && <ServerDown />}
+        {!loading && !loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
             data={users}

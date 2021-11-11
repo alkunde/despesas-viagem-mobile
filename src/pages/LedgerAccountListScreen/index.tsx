@@ -68,8 +68,9 @@ const LedgerAccountListScreen: React.FC = () => {
             color="#666"
           />
         )}
-        {networkError && <ServerDown />}
-        {!networkError &&
+        {!loading && networkError && <ServerDown />}
+        {!loading &&
+          !networkError &&
           (!ledgerAccountList || ledgerAccountList.length === 0) && (
             <NotFound />
           )}

@@ -63,10 +63,10 @@ const Travels: React.FC = () => {
             color="#666"
           />
         )}
-        {networkError && <ServerDown />}
-        {!networkError && (!travelList || travelList.length === 0) && (
-          <NotFound />
-        )}
+        {!loading && networkError && <ServerDown />}
+        {!loading &&
+          !networkError &&
+          (!travelList || travelList.length === 0) && <NotFound />}
         {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}

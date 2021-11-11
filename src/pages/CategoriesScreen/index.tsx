@@ -61,10 +61,10 @@ const CategoriesScreen: React.FC = () => {
             color="#666"
           />
         )}
-        {networkError && <ServerDown />}
-        {!networkError && (!categoryList || categoryList.length === 0) && (
-          <NotFound />
-        )}
+        {!loading && networkError && <ServerDown />}
+        {!loading &&
+          !networkError &&
+          (!categoryList || categoryList.length === 0) && <NotFound />}
         {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}

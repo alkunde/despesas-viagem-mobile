@@ -61,10 +61,10 @@ const CostCenterListScreen: React.FC = () => {
             color="#666"
           />
         )}
-        {networkError && <ServerDown />}
-        {!networkError && (!costCenters || costCenters.length === 0) && (
-          <NotFound />
-        )}
+        {!loading && networkError && <ServerDown />}
+        {!loading &&
+          !networkError &&
+          (!costCenters || costCenters.length === 0) && <NotFound />}
         {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}

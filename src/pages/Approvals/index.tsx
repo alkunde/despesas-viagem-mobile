@@ -8,14 +8,13 @@ import Header from '../../components/Header';
 import NotFound from '../../components/NotFound';
 import ServerDown from '../../components/ServerDown';
 import { Approval, ApprovalProps } from '../../components/Approval';
-import { TravelProps } from '../../components/Travel';
 
 import { Container, Content } from './styles';
 
 const Approvals: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [networkError, setNetwortkError] = useState(false);
-  const [approvalList, setApprovalList] = useState<TravelProps[]>([]);
+  const [approvalList, setApprovalList] = useState<ApprovalProps[]>([]);
 
   const { navigate } = useNavigation();
 
@@ -55,10 +54,10 @@ const Approvals: React.FC = () => {
             color="#666"
           />
         )}
-        {networkError && <ServerDown />}
-        {!networkError && (!approvalList || approvalList.length === 0) && (
-          <NotFound />
-        )}
+        {!loading && networkError && <ServerDown />}
+        {!loading &&
+          !networkError &&
+          (!approvalList || approvalList.length === 0) && <NotFound />}
         {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
