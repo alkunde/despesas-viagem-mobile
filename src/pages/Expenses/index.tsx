@@ -44,7 +44,10 @@ const Expenses: React.FC = () => {
   function handleExpenseDetail(expenseSelected: ExpenseProps) {
     if (networkError) return;
 
-    if (expenseSelected.travel.status === 'aprovado') {
+    if (
+      expenseSelected.travel &&
+      expenseSelected.travel.status === 'aprovado'
+    ) {
       Alert.alert('Aviso', 'A viagem desta despesa já foi aprovada');
       return;
     }

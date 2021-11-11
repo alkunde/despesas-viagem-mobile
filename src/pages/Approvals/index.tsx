@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { FlatList, ActivityIndicator } from 'react-native';
+import { FlatList, ActivityIndicator, Alert } from 'react-native';
 
 import api from '../../services/api';
 
@@ -39,6 +39,11 @@ const Approvals: React.FC = () => {
   );
 
   function handleApprovalDetail(approvalSelected: ApprovalProps) {
+    if (approvalSelected.status !== 'em aprovação') {
+      Alert.alert('Aviso', 'Não é possível aprovar esta viagem');
+      return;
+    }
+
     const { id } = approvalSelected;
     navigate('ApprovalDetail', { id });
   }
