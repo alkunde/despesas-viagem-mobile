@@ -22,10 +22,12 @@ import UserListScreen from '../pages/UserListScreen';
 const App = createStackNavigator();
 
 const AppRoutes: React.FC = () => (
-  <App.Navigator screenOptions={{
-    headerShown: false,
-    cardStyle: { backgroundColor: "#3f88c5" }
-  }}>
+  <App.Navigator
+    screenOptions={{
+      headerShown: false,
+      cardStyle: { backgroundColor: '#3f88c5' },
+    }}
+  >
     <App.Screen name="Dashboard" component={Dashboard} />
     <App.Screen name="Expenses" component={Expenses} />
     <App.Screen name="Travels" component={Travels} />
@@ -40,10 +42,13 @@ const AppRoutes: React.FC = () => (
     <App.Screen name="CategoryDetail" component={CategoryDetail} />
     <App.Screen name="CostCenterListScreen" component={CostCenterListScreen} />
     <App.Screen name="CostCenterDetail" component={CostCenterDetail} />
-    <App.Screen name="LedgerAccountListScreen" component={LedgerAccountListScreen} />
+    <App.Screen
+      name="LedgerAccountListScreen"
+      component={LedgerAccountListScreen}
+    />
     <App.Screen name="LedgerAccountDetail" component={LedgerAccountDetail} />
     <App.Screen name="UserListScreen" component={UserListScreen} />
   </App.Navigator>
-)
+);
 
 export default AppRoutes;

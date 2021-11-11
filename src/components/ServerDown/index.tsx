@@ -11,6 +11,6 @@ const ServerDown: React.FC = () => {
       <Title>Falha de conexão</Title>
     </Container>
   );
-}
+};
 
 export default ServerDown;

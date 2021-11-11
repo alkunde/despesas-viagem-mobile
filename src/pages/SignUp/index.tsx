@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Alert, SafeAreaView, View, TextInput, Keyboard } from 'react-native';
-import Icon from "react-native-vector-icons/Feather";
+import Icon from 'react-native-vector-icons/Feather';
 import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -28,50 +28,53 @@ const SignUp: React.FC = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      if (loading) return;
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        if (loading) return;
 
-      formRef.current?.setErrors({});
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
-        email: Yup.string()
-          .email('Digite um e-mail válido')
-          .required('E-mail obrigatório'),
-        password: Yup.string().min(6, "Mínimo 6 dígitos"),
-      });
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .email('Digite um e-mail válido')
+            .required('E-mail obrigatório'),
+          password: Yup.string().min(6, 'Mínimo 6 dígitos'),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      Keyboard.dismiss();
-      setLoading(true);
-      await api.post('/users', data);
+        Keyboard.dismiss();
+        setLoading(true);
+        await api.post('/users', data);
 
-      Alert.alert(
-        'Cadastro realizado com sucesso!',
-        'Você já pode fazer login',
-      );
+        Alert.alert(
+          'Cadastro realizado com sucesso!',
+          'Você já pode fazer login',
+        );
 
-      navigation.goBack();
-    } catch (err) {
-      setLoading(false);
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
+        navigation.goBack();
+      } catch (err) {
+        setLoading(false);
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
 
-        formRef.current?.setErrors(errors);
+          formRef.current?.setErrors(errors);
 
-        return;
+          return;
+        }
+
+        Alert.alert(
+          'Erro no cadastro',
+          'Ocorreu um erro ao fazer o cadastro, tente novamente.',
+        );
       }
-
-      Alert.alert(
-        'Erro no cadastro',
-        'Ocorreu um erro ao fazer o cadastro, tente novamente.',
-      );
-    }
-  }, [navigation]);
+    },
+    [navigation],
+  );
 
   return (
     <>
@@ -128,6 +131,6 @@ const SignUp: React.FC = () => {
       </BackToSignIn>
     </>
   );
-}
+};
 
 export default SignUp;

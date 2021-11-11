@@ -1,4 +1,11 @@
-import React, { useState, useCallback, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import { TextInputProps } from 'react-native';
 import { useField } from '@unform/core';
 
@@ -17,7 +24,10 @@ interface InputRef {
   focus(): void;
 }
 
-const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = ({ name, icon, ...rest }, ref) => {
+const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
+  { name, icon, ...rest },
+  ref,
+) => {
   const inputElementRef = useRef<any>(null);
 
   const { registerField, defaultValue = '', fieldName, error } = useField(name);
@@ -39,7 +49,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = ({ name, ico
   useImperativeHandle(ref, () => ({
     focus() {
       inputElementRef.current.focus();
-    }
+    },
   }));
 
   useEffect(() => {
@@ -60,14 +70,13 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = ({ name, ico
 
   return (
     <Container isFocused={isFocused} isErrored={!!error}>
-      {icon
-        ? <Icon
+      {icon && (
+        <Icon
           name={icon}
           size={20}
           color={isFocused || isFilled ? '#ff9000' : '#a2aebb'}
         />
-        : <></>
-      }
+      )}
       <TextInput
         ref={inputElementRef}
         keyboardAppearance="light"

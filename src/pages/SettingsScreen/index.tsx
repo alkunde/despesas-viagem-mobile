@@ -24,7 +24,7 @@ const SettingsScreen: React.FC = () => {
         <ButtonText>Usuários</ButtonText>
       </Button>
     </Container>
-  )
-}
+  );
+};
 
 export default SettingsScreen;

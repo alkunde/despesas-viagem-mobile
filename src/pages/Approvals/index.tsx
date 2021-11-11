@@ -19,17 +19,11 @@ const Approvals: React.FC = () => {
 
   const { navigate } = useNavigation();
 
-  useFocusEffect(
-    useCallback(() => {
-      loadApprovals()
-    }, [])
-  );
-
   const loadApprovals = useCallback(async () => {
     try {
       setLoading(true);
 
-      const response = await api.get("/approvals");
+      const response = await api.get('/approvals');
 
       setApprovalList(response.data);
       setLoading(false);
@@ -38,6 +32,12 @@ const Approvals: React.FC = () => {
       setNetwortkError(true);
     }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadApprovals();
+    }, []),
+  );
 
   function handleApprovalDetail(approvalSelected: ApprovalProps) {
     const { id } = approvalSelected;
@@ -48,10 +48,18 @@ const Approvals: React.FC = () => {
     <Container>
       <Header>Aprovações</Header>
       <Content>
-        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        { networkError && <ServerDown /> }
-        { !networkError && (!approvalList || approvalList.length === 0) && <NotFound /> }
-        { !loading && !networkError &&
+        {loading && (
+          <ActivityIndicator
+            style={{ marginTop: 16 }}
+            size="large"
+            color="#666"
+          />
+        )}
+        {networkError && <ServerDown />}
+        {!networkError && (!approvalList || approvalList.length === 0) && (
+          <NotFound />
+        )}
+        {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
             data={approvalList}
@@ -64,10 +72,10 @@ const Approvals: React.FC = () => {
               />
             )}
           />
-        }
+        )}
       </Content>
     </Container>
   );
-}
+};
 
 export default Approvals;

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="br.ufpr.andrekunde.travelexpenses">
+  package="com.myproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

@@ -10,11 +10,11 @@ export type ApprovalProps = {
   advancedAmount?: number;
   reason: string;
   status: string;
-}
+};
 
 type Props = RectButtonProps & {
   data: ApprovalProps;
-}
+};
 
 export const Approval: React.FC<Props> = ({ data, ...rest }) => {
   return (
@@ -23,5 +23,5 @@ export const Approval: React.FC<Props> = ({ data, ...rest }) => {
       <Text>{data.reason}</Text>
       <Text>{data.status}</Text>
     </Container>
-  )
-}
+  );
+};

@@ -9,13 +9,13 @@ import {
   AmountText,
   DateText,
   CategoryText,
-  ContainerWithoutClick
+  ContainerWithoutClick,
 } from './styles';
 
 export type CategoryProps = {
   id: number;
   description: string;
-}
+};
 
 export type ExpenseProps = {
   id: number;
@@ -25,24 +25,19 @@ export type ExpenseProps = {
   category: CategoryProps;
   user: object;
   travel: TravelProps;
-}
+};
 
 type Props = RectButtonProps & {
   data: ExpenseProps;
-}
+};
 
 export const Expense: React.FC<Props> = ({ data, ...rest }) => {
-  const {
-    description,
-    expenseDate,
-    category,
-    travel,
-  } = data;
+  const { description, expenseDate, category, travel } = data;
 
-  const amountFormatted = data.amount.toLocaleString(
-    'pt-BR',
-    { style: 'currency', currency: 'BRL' },
-  );
+  const amountFormatted = data.amount.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
 
   return (
     <Container {...rest}>
@@ -50,22 +45,18 @@ export const Expense: React.FC<Props> = ({ data, ...rest }) => {
       <AmountText>Valor: {amountFormatted}</AmountText>
       <DateText>Data: {expenseDate}</DateText>
       <CategoryText>Categoria: {category.description}</CategoryText>
-      { travel && <Text>Viagem: {travel.id}</Text> }
+      {travel && <Text>Viagem: {travel.id}</Text>}
     </Container>
   );
-}
+};
 
 export const TravelExpense: React.FC<Props> = ({ data, ...rest }) => {
-  const {
-    description,
-    expenseDate,
-    category,
-  } = data;
+  const { description, expenseDate, category } = data;
 
-  const amountFormatted = data.amount.toLocaleString(
-    'pt-BR',
-    { style: 'currency', currency: 'BRL' },
-  );
+  const amountFormatted = data.amount.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
 
   return (
     <ContainerWithoutClick>
@@ -79,5 +70,5 @@ export const TravelExpense: React.FC<Props> = ({ data, ...rest }) => {
         <Text>Excluir</Text>
       </RectButton>
     </ContainerWithoutClick>
-  )
-}
+  );
+};

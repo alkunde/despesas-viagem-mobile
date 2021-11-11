@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useEffect, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import api from '../services/api';
@@ -79,7 +85,7 @@ const AuthProvider: React.FC = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 function useAuth(): AuthContextData {
   const context = useContext(AuthContext);

@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Keyboard, Alert, Modal, FlatList, TouchableOpacity } from 'react-native';
+import {
+  Keyboard,
+  Alert,
+  Modal,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -36,7 +42,9 @@ const CategoryDetail: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
-  const [ledgerAccounts, setLedgerAccounts] = useState<LedgerAccountProps[]>([]);
+  const [ledgerAccounts, setLedgerAccounts] = useState<LedgerAccountProps[]>(
+    [],
+  );
   const [ledgerAccount, setLedgerAccount] = useState({} as LedgerAccountProps);
 
   useEffect(() => {
@@ -44,7 +52,7 @@ const CategoryDetail: React.FC = () => {
       const response = await api.get('/ledger_accounts');
 
       setLedgerAccounts(response.data);
-    };
+    }
 
     loadLedgerAccounts();
 
@@ -56,61 +64,61 @@ const CategoryDetail: React.FC = () => {
     }
   }, []);
 
-  const handleAddCategory = useCallback(async (data: CategoryProps) => {
-    if (loading) return;
+  const handleAddCategory = useCallback(
+    async (data: CategoryProps) => {
+      if (loading) return;
 
-    try {
-      formRef.current?.setErrors({});
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        description: Yup.string().required('Campo obrigatório'),
-        ledgerAccount: Yup.string().required('Campo obrigatório'),
-      });
+        const schema = Yup.object().shape({
+          description: Yup.string().required('Campo obrigatório'),
+          ledgerAccount: Yup.string().required('Campo obrigatório'),
+        });
 
-      Keyboard.dismiss();
-      setLoading(true);
+        Keyboard.dismiss();
+        setLoading(true);
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      data.ledgerAccount = ledgerAccount;
+        data.ledgerAccount = ledgerAccount;
 
-      if (routeParams.categorySelected.id) {
-        data.id = routeParams.categorySelected.id;
-        await api.put('/categories', data);
-      } else {
-        await api.post('/categories', data);
+        if (routeParams.categorySelected.id) {
+          data.id = routeParams.categorySelected.id;
+          await api.put('/categories', data);
+        } else {
+          await api.post('/categories', data);
+        }
+
+        Alert.alert('Sucesso', 'Categoria salva!');
+
+        navigation.goBack();
+      } catch (err) {
+        setLoading(false);
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+
+        Alert.alert('Falha de conexão', 'Tente novamente mais tarde');
       }
+    },
+    [navigation, ledgerAccount],
+  );
 
-      Alert.alert(
-        'Sucesso',
-        'Categoria salva!'
-      );
-
-      navigation.goBack();
-    } catch (err) {
-      setLoading(false);
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-
-        formRef.current?.setErrors(errors);
-
-        return;
-      }
-
-      Alert.alert(
-        'Falha de conexão',
-        'Tente novamente mais tarde',
-      );
-    }
-  }, [navigation, ledgerAccount]);
-
-  const handleItemSelected = useCallback((item: LedgerAccountProps) => {
-    formRef.current?.setFieldValue('ledgerAccount', item.description);
-    setLedgerAccount(item);
-    setShowPicker(false);
-  }, [ledgerAccount]);
+  const handleItemSelected = useCallback(
+    (item: LedgerAccountProps) => {
+      formRef.current?.setFieldValue('ledgerAccount', item.description);
+      setLedgerAccount(item);
+      setShowPicker(false);
+    },
+    [ledgerAccount],
+  );
 
   return (
     <Container>
@@ -129,16 +137,13 @@ const CategoryDetail: React.FC = () => {
             onPressIn={() => setShowPicker(true)}
           />
         </Form>
-        <Button
-          loading={loading}
-          onPress={() => formRef.current?.submitForm()}
-        >
+        <Button loading={loading} onPress={() => formRef.current?.submitForm()}>
           Salvar
         </Button>
       </Content>
 
       <Modal
-        animationType={"slide"}
+        animationType="slide"
         presentationStyle="formSheet"
         visible={showPicker}
       >
@@ -162,6 +167,6 @@ const CategoryDetail: React.FC = () => {
       </Modal>
     </Container>
   );
-}
+};
 
 export default CategoryDetail;

@@ -10,13 +10,13 @@ import {
   DescriptionText,
   AmountText,
   DateText,
-  CategoryText
+  CategoryText,
 } from './styles';
 
 export type CategoryProps = {
   id: number;
   description: string;
-}
+};
 
 export type ExpenseProps = {
   id: number;
@@ -27,11 +27,11 @@ export type ExpenseProps = {
   user: object;
   travel: TravelProps;
   checked: boolean;
-}
+};
 
 type Props = RectButtonProps & {
   data: ExpenseProps;
-}
+};
 
 export const ExpenseReport: React.FC<Props> = ({ data, ...rest }) => {
   return (
@@ -50,4 +50,4 @@ export const ExpenseReport: React.FC<Props> = ({ data, ...rest }) => {
       </View>
     </Container>
   );
-}
+};

@@ -8,7 +8,7 @@ import Header from '../../components/Header';
 import Button from '../../components/Button';
 import NotFound from '../../components/NotFound';
 import ServerDown from '../../components/ServerDown';
-import { Category, CategoryProps } from '../../components/Category';
+import Category, { CategoryProps } from '../../components/Category';
 
 import { Container, Content } from './styles';
 
@@ -18,12 +18,6 @@ const CategoriesScreen: React.FC = () => {
   const [networkError, setNetworkError] = useState(false);
 
   const { navigate } = useNavigation();
-
-  useFocusEffect(
-    useCallback(() => {
-      loadCategories()
-    }, [])
-  );
 
   const loadCategories = useCallback(async () => {
     try {
@@ -38,23 +32,40 @@ const CategoriesScreen: React.FC = () => {
     }
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      loadCategories();
+    }, []),
+  );
+
   function handleCategoryDetail(categorySelected: CategoryProps) {
     if (networkError) return;
 
-    navigate("CategoryDetail", { categorySelected });
+    navigate('CategoryDetail', { categorySelected });
   }
 
   return (
     <Container>
       <Header>Categorias</Header>
       <Content>
-        <Button loading={false} onPress={() => handleCategoryDetail({} as CategoryProps)}>
+        <Button
+          loading={false}
+          onPress={() => handleCategoryDetail({} as CategoryProps)}
+        >
           Nova Categoria
         </Button>
-        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        { networkError && <ServerDown /> }
-        { !networkError && (!categoryList || categoryList.length === 0) && <NotFound /> }
-        { !loading && !networkError &&
+        {loading && (
+          <ActivityIndicator
+            style={{ marginTop: 16 }}
+            size="large"
+            color="#666"
+          />
+        )}
+        {networkError && <ServerDown />}
+        {!networkError && (!categoryList || categoryList.length === 0) && (
+          <NotFound />
+        )}
+        {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
             data={categoryList}
@@ -67,10 +78,10 @@ const CategoriesScreen: React.FC = () => {
               />
             )}
           />
-        }
+        )}
       </Content>
     </Container>
   );
-}
+};
 
 export default CategoriesScreen;

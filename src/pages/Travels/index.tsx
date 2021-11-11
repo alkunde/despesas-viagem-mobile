@@ -21,12 +21,6 @@ const Travels: React.FC = () => {
   const { user } = useAuth();
   const { navigate } = useNavigation();
 
-  useFocusEffect(
-    useCallback(() => {
-      loadTravels()
-    }, [])
-  );
-
   const loadTravels = useCallback(async () => {
     try {
       setLoading(true);
@@ -41,39 +35,52 @@ const Travels: React.FC = () => {
     }
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      loadTravels();
+    }, []),
+  );
+
   function handleTravelExpenses(travelSelected: TravelProps) {
-    navigate("TravelExpenses", { travelSelected });
+    navigate('TravelExpenses', { travelSelected });
   }
 
   function handleTravelDetail() {
-    navigate("TravelDetail");
+    navigate('TravelDetail');
   }
 
   return (
     <Container>
       <Header>Viagens</Header>
       <Content>
-        <Button loading={false} onPress={() => handleTravelDetail()}>Nova viagem</Button>
-        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        { networkError && <ServerDown /> }
-        { !networkError && (!travelList || travelList.length === 0) && <NotFound /> }
-        {!loading && !networkError ? (
+        <Button loading={false} onPress={() => handleTravelDetail()}>
+          Nova Viagem
+        </Button>
+        {loading && (
+          <ActivityIndicator
+            style={{ marginTop: 16 }}
+            size="large"
+            color="#666"
+          />
+        )}
+        {networkError && <ServerDown />}
+        {!networkError && (!travelList || travelList.length === 0) && (
+          <NotFound />
+        )}
+        {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
             data={travelList}
             showsVerticalScrollIndicator={false}
             keyExtractor={item => String(item.id)}
             renderItem={({ item }) => (
-              <Travel
-                data={item}
-                onPress={() => handleTravelExpenses(item)}
-              />
+              <Travel data={item} onPress={() => handleTravelExpenses(item)} />
             )}
           />
-        ) : <></>}
+        )}
       </Content>
     </Container>
   );
-}
+};
 
 export default Travels;

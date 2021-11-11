@@ -21,12 +21,6 @@ const Expenses: React.FC = () => {
 
   const { navigate } = useNavigation();
 
-  useFocusEffect(
-    useCallback(() => {
-      loadExpenses()
-    }, [])
-  );
-
   const loadExpenses = useCallback(async () => {
     try {
       setLoading(true);
@@ -41,10 +35,16 @@ const Expenses: React.FC = () => {
     }
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      loadExpenses();
+    }, []),
+  );
+
   function handleExpenseDetail(expenseSelected: ExpenseProps) {
     if (networkError) return;
 
-    navigate("ExpenseDetail", { expenseSelected });
+    navigate('ExpenseDetail', { expenseSelected });
   }
 
   return (
@@ -55,28 +55,33 @@ const Expenses: React.FC = () => {
           loading={false}
           onPress={() => handleExpenseDetail({} as ExpenseProps)}
         >
-          Nova despesa
+          Nova Despesa
         </Button>
-        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        { networkError && <ServerDown /> }
-        { !networkError && (!expenseList || expenseList.length === 0) && <NotFound /> }
-        { !networkError && !loading &&
+        {loading && (
+          <ActivityIndicator
+            style={{ marginTop: 16 }}
+            size="large"
+            color="#666"
+          />
+        )}
+        {networkError && <ServerDown />}
+        {!networkError && (!expenseList || expenseList.length === 0) && (
+          <NotFound />
+        )}
+        {!networkError && !loading && (
           <FlatList
             style={{ marginTop: 8 }}
             data={expenseList}
             showsVerticalScrollIndicator={false}
             keyExtractor={item => String(item.id)}
             renderItem={({ item }) => (
-              <Expense
-                data={item}
-                onPress={() => handleExpenseDetail(item)}
-              />
+              <Expense data={item} onPress={() => handleExpenseDetail(item)} />
             )}
           />
-        }
+        )}
       </Content>
     </Container>
   );
-}
+};
 
 export default Expenses;

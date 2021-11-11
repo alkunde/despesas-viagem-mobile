@@ -8,13 +8,13 @@ export type CategoryProps = {
   id: number;
   description: string;
   ledgerAccount: LedgerAccountProps;
-}
+};
 
 type Props = RectButtonProps & {
   data: CategoryProps;
-}
+};
 
-export const Category: React.FC<Props> = ({ data, ...rest }) => {
+const Category: React.FC<Props> = ({ data, ...rest }) => {
   return (
     <>
       <Container {...rest}>
@@ -23,4 +23,6 @@ export const Category: React.FC<Props> = ({ data, ...rest }) => {
       <Divider />
     </>
   );
-}
+};
+
+export default Category;

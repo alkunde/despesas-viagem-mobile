@@ -36,46 +36,52 @@ const LedgerAccountDetail: React.FC = () => {
     }
   }, []);
 
-  const handleAddLedgerAccount = useCallback(async (data: LedgerAccountProps) => {
-    if (loading) return;
+  const handleAddLedgerAccount = useCallback(
+    async (data: LedgerAccountProps) => {
+      if (loading) return;
 
-    try {
-      formRef.current?.setErrors({});
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        code: Yup.string().required('Campo obrigatório'),
-        description: Yup.string().required('Campo obrigatório'),
-      });
+        const schema = Yup.object().shape({
+          code: Yup.string().required('Campo obrigatório'),
+          description: Yup.string().required('Campo obrigatório'),
+        });
 
-      Keyboard.dismiss();
-      setLoading(true);
+        Keyboard.dismiss();
+        setLoading(true);
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      if (routeParams.ledgerAccountSelected.id) {
-        await api.put(`/ledger_accounts/${routeParams.ledgerAccountSelected.id}`, data);
-      } else {
-        await api.post('/ledger_accounts', data);
+        if (routeParams.ledgerAccountSelected.id) {
+          await api.put(
+            `/ledger_accounts/${routeParams.ledgerAccountSelected.id}`,
+            data,
+          );
+        } else {
+          await api.post('/ledger_accounts', data);
+        }
+
+        Alert.alert('Sucesso', 'Conta contábil salva!');
+
+        navigation.goBack();
+      } catch (err) {
+        setLoading(false);
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+
+        Alert.alert('Falha de conexão', 'Tente novamente mais tarde');
       }
-
-      Alert.alert('Sucesso', 'Conta contábil salva!');
-
-      navigation.goBack();
-    } catch (err) {
-      setLoading(false);
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-
-        formRef.current?.setErrors(errors);
-
-        return;
-      }
-
-      Alert.alert('Falha de conexão', 'Tente novamente mais tarde');
-    }
-  }, [navigation]);
+    },
+    [navigation],
+  );
 
   return (
     <Container>
@@ -95,15 +101,12 @@ const LedgerAccountDetail: React.FC = () => {
           />
         </Form>
 
-        <Button
-          loading={loading}
-          onPress={() => formRef.current?.submitForm()}
-        >
+        <Button loading={loading} onPress={() => formRef.current?.submitForm()}>
           Salvar
         </Button>
       </Content>
     </Container>
   );
-}
+};
 
 export default LedgerAccountDetail;

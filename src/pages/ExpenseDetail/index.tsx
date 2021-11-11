@@ -15,6 +15,15 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import * as Yup from 'yup';
 
+import api from '../../services/api';
+
+import Header from '../../components/Header';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import { CategoryProps, ExpenseProps } from '../../components/Expense';
+import { useAuth } from '../../hooks/auth';
+import getValidationErrors from '../../utils/getValidationErrors';
+
 import {
   Container,
   Content,
@@ -23,14 +32,6 @@ import {
   HeaderTitle,
   ItemList,
 } from './styles';
-
-import { CategoryProps, ExpenseProps } from '../../components/Expense';
-import api from '../../services/api';
-import { useAuth } from '../../hooks/auth';
-import getValidationErrors from '../../utils/getValidationErrors';
-import Header from '../../components/Header';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
 
 interface RouteParams {
   expenseSelected: ExpenseProps;
@@ -64,6 +65,20 @@ const ExpenseDetail: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const amountRef = useRef<TextInput>(null);
 
+  const toCurrency = useCallback((value: number) => {
+    const newNumber = parseFloat(value.toString()).toFixed(2);
+    const str = newNumber
+      .toString()
+      .trim()
+      .replace(/([ˆ0-9])/g, '');
+    const numero = parseInt(str) / 100;
+
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  }, []);
+
   useEffect(() => {
     async function loadCategories(): Promise<void> {
       const response = await api.get('/categories');
@@ -85,23 +100,15 @@ const ExpenseDetail: React.FC = () => {
       });
       setCategory(expenseSelected.category);
     } else {
-      formRef.current?.setFieldValue('expenseDate', expenseDate.toLocaleDateString('pt-BR'))
+      formRef.current?.setFieldValue(
+        'expenseDate',
+        expenseDate.toLocaleDateString('pt-BR'),
+      );
     }
   }, []);
 
-  const toCurrency = useCallback((value: number) => {
-    const newNumber = parseFloat(value.toString()).toFixed(2);
-    const str = newNumber.toString().trim().replace(/([^0-9])/g, '');
-    const numero = parseInt(str) / 100;
-
-    return numero.toLocaleString(
-      'pt-BR',
-      { style: 'currency', currency: 'BRL' }
-    );
-  }, []);
-
-  const toFloatNumber = useCallback((value: String) => {
-    const str = value.trim().replace(/([^0-9])/g, '');
+  const toFloatNumber = useCallback((value: string) => {
+    const str = value.trim().replace(/([ˆ0-9])/g, '');
     const numero = parseInt(str) / 100;
 
     return numero;
@@ -109,7 +116,10 @@ const ExpenseDetail: React.FC = () => {
 
   const handleConfirmDate = useCallback((data: Date) => {
     setExpenseDate(data);
-    formRef.current?.setFieldValue('expenseDate', data.toLocaleDateString('pt-BR'));
+    formRef.current?.setFieldValue(
+      'expenseDate',
+      data.toLocaleDateString('pt-BR'),
+    );
 
     setShowDatePicker(false);
   }, []);
@@ -118,82 +128,86 @@ const ExpenseDetail: React.FC = () => {
     setShowDatePicker(false);
   }, []);
 
-  const handleAddExpense = useCallback(async (data: ExpenseFormData) => {
-    if (loading) return;
+  const handleAddExpense = useCallback(
+    async (data: ExpenseFormData) => {
+      if (loading) return;
 
-    try {
-      formRef.current?.setErrors({});
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        description: Yup.string().required('Campo obrigatório'),
-        amount: Yup.string().required('Campo obrigatório'),
-        category: Yup.string().required('Campo obrigatório'),
-      });
+        const schema = Yup.object().shape({
+          description: Yup.string().required('Campo obrigatório'),
+          amount: Yup.string().required('Campo obrigatório'),
+          category: Yup.string().required('Campo obrigatório'),
+        });
 
-      Keyboard.dismiss();
-      setLoading(true);
-
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-
-      const teste = toFloatNumber(formRef.current?.getFieldValue('amount'));
-      if (!teste || teste <= 0) {
         Keyboard.dismiss();
-        formRef.current?.setFieldError('amount', 'Valor deve ser maior que 0');
+        setLoading(true);
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        const teste = toFloatNumber(formRef.current?.getFieldValue('amount'));
+        if (!teste || teste <= 0) {
+          Keyboard.dismiss();
+          formRef.current?.setFieldError(
+            'amount',
+            'Valor deve ser maior que 0',
+          );
+          setLoading(false);
+
+          return;
+        }
+
+        data.user = user;
+        data.day = expenseDate.getDate();
+        data.month = expenseDate.getMonth() + 1;
+        data.year = expenseDate.getFullYear();
+        data.category = category;
+        data.amount = toFloatNumber(formRef.current?.getFieldValue('amount'));
+
+        if (routeParams.expenseSelected.id) {
+          data.id = routeParams.expenseSelected.id;
+          await api.put(`/expenses/${data.id}`, data);
+        } else {
+          await api.post('/expenses', data);
+        }
+
+        Alert.alert('Sucesso', 'Despesa cadastrada!');
+
+        navigation.goBack();
+      } catch (err) {
         setLoading(false);
-        return;
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+
+        Alert.alert('Falha de conexão', 'Tente novamente mais tarde');
       }
+    },
+    [navigation, category],
+  );
 
-      data.user = user;
-      data.day = expenseDate.getDate();
-      data.month = expenseDate.getMonth() + 1;
-      data.year = expenseDate.getFullYear();
-      data.category = category;
-      data.amount = toFloatNumber(formRef.current?.getFieldValue('amount'));
-
-      if (routeParams.expenseSelected.id) {
-        data.id = routeParams.expenseSelected.id;
-        await api.put(`/expenses/${data.id}`, data);
-      } else {
-        await api.post('/expenses', data);
-      }
-
-      Alert.alert(
-        'Sucesso',
-        'Despesa cadastrada!',
-      );
-
-      navigation.goBack();
-    } catch (err) {
-      setLoading(false);
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-
-        formRef.current?.setErrors(errors);
-
-        return;
-      }
-
-      Alert.alert(
-        'Falha de conexão',
-        'Tente novamente mais tarde',
-      );
-    }
-  }, [navigation, category]);
-
-  const changeAmountValue = useCallback((text: String) => {
-    const str = text.toString().trim().replace(/([^0-9])/g, '');
+  const changeAmountValue = useCallback((text: string) => {
+    const str = text
+      .toString()
+      .trim()
+      .replace(/([ˆ0-9])/g, '');
     const numero = parseInt(str) / 100;
-    const converted = numero.toLocaleString(
-      'pt-BR',
-      { style: 'currency', currency: 'BRL' }
-    );
+    const converted = numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
     formRef.current?.setFieldValue('amount', converted);
   }, []);
 
   const handleItemSelected = useCallback((item: CategoryProps) => {
-    formRef.current?.setFieldValue('category', item.description);
+    formRef.current?.setFieldValue('categoty', item.description);
     setCategory(item);
     setShowPicker(false);
   }, []);
@@ -233,18 +247,14 @@ const ExpenseDetail: React.FC = () => {
           </Form>
         </ScrollView>
 
-        <Button
-          loading={loading}
-          onPress={() => formRef.current?.submitForm()}
-        >
+        <Button loading={loading} onPress={() => formRef.current?.submitForm()}>
           Salvar
         </Button>
       </Content>
 
       <DateTimePickerModal
         cancelTextIOS="Cancelar"
-        confirmTextIOS="Confirmar"
-        headerTextIOS="Selecionar data"
+        confirmTextIOS="Confirm"
         isVisible={showDatePicker}
         mode="date"
         date={expenseDate}
@@ -253,7 +263,7 @@ const ExpenseDetail: React.FC = () => {
       />
 
       <Modal
-        animationType={"slide"}
+        animationType="slide"
         presentationStyle="formSheet"
         visible={showPicker}
       >
@@ -277,6 +287,6 @@ const ExpenseDetail: React.FC = () => {
       </Modal>
     </Container>
   );
-}
+};
 
 export default ExpenseDetail;

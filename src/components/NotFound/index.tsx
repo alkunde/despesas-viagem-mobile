@@ -11,6 +11,6 @@ const NotFound: React.FC = () => {
       <Title>Nenhum registro encontrado</Title>
     </Container>
   );
-}
+};
 
 export default NotFound;

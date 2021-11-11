@@ -1,6 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { View, FlatList, Alert, ActivityIndicator } from 'react-native';
-import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
+import {
+  useNavigation,
+  useFocusEffect,
+  useRoute,
+} from '@react-navigation/native';
 
 import api from '../../services/api';
 
@@ -20,7 +24,7 @@ interface RouteParams {
 const TravelExpenses: React.FC = () => {
   const route = useRoute();
   const { travelSelected } = route.params as RouteParams;
-  const title: string = `Relatório: ${travelSelected.id.toString()}`
+  const title = `Relatório: ${travelSelected.id.toString()}`;
 
   const [loading, setLoading] = useState(false);
   const [networkError, setNetworkError] = useState(false);
@@ -29,16 +33,10 @@ const TravelExpenses: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
 
-  useFocusEffect(
-    useCallback(() => {
-      loadExpenses(travelSelected.id);
-    }, [])
-  );
-
-  const loadExpenses = useCallback(async (id) => {
+  const loadExpenses = useCallback(async id => {
     try {
       setLoading(true);
-      const response = await api.get("/travel/" + id);
+      const response = await api.get(`/travel/${id}`);
 
       setExpenseList(response.data);
       setLoading(false);
@@ -48,27 +46,33 @@ const TravelExpenses: React.FC = () => {
     }
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      loadExpenses(travelSelected.id);
+    }, []),
+  );
+
   function handleAddExpenses() {
     if (sendLoading) return;
 
-    if (travelSelected.status === 'aberto' || travelSelected.status === 'reprovado') {
-      navigate("ExpensesToTravel", { travelSelected });
+    if (
+      travelSelected.status === 'aberto' ||
+      travelSelected.status === 'reprovado'
+    ) {
+      navigate('ExpensesToTravel', { travelSelected });
     } else {
-      Alert.alert(
-        'Aviso',
-        'Relatório não está disponível para alteração'
-      );
+      Alert.alert('Aviso', 'Relatório não está disponível para alteração');
     }
   }
 
   async function handleSendTravel() {
     if (sendLoading) return;
 
-    if (travelSelected.status === 'em aprovação' || travelSelected.status === 'fechado') {
-      Alert.alert(
-        'Aviso',
-        'Relatório já foi enviado'
-      );
+    if (
+      travelSelected.status === 'em aprovação' ||
+      travelSelected.status === 'fechado'
+    ) {
+      Alert.alert('Aviso', 'Relatório já foi enviado');
       return;
     }
 
@@ -78,21 +82,13 @@ const TravelExpenses: React.FC = () => {
       try {
         await api.patch(`/travels/${travelSelected.id}/approval`);
 
-        Alert.alert(
-          'Sucesso',
-          'Relatório enviado com sucesso',
-          [
-            { text: "OK", onPress: () => goBack() }
-          ]
-        );
+        Alert.alert('Sucesso', 'Relatório enviado com sucesso', [
+          { text: 'OK', onPress: () => goBack() },
+        ]);
       } catch (err) {
-        Alert.alert(
-          'Aviso',
-          'Falha na operação',
-          [
-            { text: "OK", onPress: () => setSendLoading(false) }
-          ]
-        );
+        Alert.alert('Aviso', 'Falha na operação', [
+          { text: 'OK', onPress: () => setSendLoading(false) },
+        ]);
       }
     } else {
       setSendLoading(false);
@@ -100,11 +96,11 @@ const TravelExpenses: React.FC = () => {
   }
 
   async function handleDeleteExpense(item: ExpenseProps) {
-    if (travelSelected.status === 'aprovado' || travelSelected.status === 'em aprovação') {
-      Alert.alert(
-        'Aviso',
-        'Não é possível alterar este relatório'
-      );
+    if (
+      travelSelected.status === 'aprovado' ||
+      travelSelected.status === 'em aprovação'
+    ) {
+      Alert.alert('Aviso', 'Não é possível alterar este relatório');
       return;
     }
 
@@ -112,10 +108,7 @@ const TravelExpenses: React.FC = () => {
       await api.patch(`/expenses/${item.id}/clear-travel`);
       loadExpenses(travelSelected.id);
     } catch (err) {
-      Alert.alert(
-        'Aviso',
-        'Falha na conexão'
-      );
+      Alert.alert('Aviso', 'Falha na conexão');
     }
   }
 
@@ -139,10 +132,18 @@ const TravelExpenses: React.FC = () => {
             Enviar
           </Button>
         </View>
-        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        { networkError && <ServerDown /> }
-        { !networkError && (!expenseList || expenseList.length === 0) && <NotFound /> }
-        { !loading && !networkError &&
+        {loading && (
+          <ActivityIndicator
+            style={{ marginTop: 16 }}
+            size="large"
+            color="#666"
+          />
+        )}
+        {networkError && <ServerDown />}
+        {!networkError && (!expenseList || expenseList.length === 0) && (
+          <NotFound />
+        )}
+        {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
             data={expenseList}
@@ -155,10 +156,10 @@ const TravelExpenses: React.FC = () => {
               />
             )}
           />
-        }
+        )}
       </Content>
     </Container>
-  )
-}
+  );
+};
 
 export default TravelExpenses;

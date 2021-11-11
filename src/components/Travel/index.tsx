@@ -14,11 +14,11 @@ export type TravelProps = {
   reason: string;
   status: string;
   user: object;
-}
+};
 
 type Props = RectButtonProps & {
   data: TravelProps;
-}
+};
 
 export const Travel: React.FC<Props> = ({ data, ...rest }) => {
   const {
@@ -28,13 +28,13 @@ export const Travel: React.FC<Props> = ({ data, ...rest }) => {
     arrivalDate,
     reason,
     amount,
-    status
+    status,
   } = data;
 
-  const amountFormatted = amount?.toLocaleString(
-    'pt-BR',
-    { style: 'currency', currency: 'BRL' },
-  );
+  const amountFormatted = amount?.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
 
   return (
     <Container {...rest}>
@@ -44,7 +44,7 @@ export const Travel: React.FC<Props> = ({ data, ...rest }) => {
         <Text>Destino: {destination}</Text>
         <Text>Data Retorno: {arrivalDate}</Text>
         <Text>Motivo: {reason}</Text>
-        { amount && amount > 0 && <Text>Adiantamento: {amountFormatted}</Text> }
+        {amount && amount > 0 && <Text>Adiantamento: {amountFormatted}</Text>}
       </Content>
       <View>
         <StatusFlag>
@@ -52,5 +52,5 @@ export const Travel: React.FC<Props> = ({ data, ...rest }) => {
         </StatusFlag>
       </View>
     </Container>
-  )
-}
+  );
+};

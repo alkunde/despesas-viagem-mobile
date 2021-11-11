@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
       return;
     }
 
-    navigate('SettingsScreen')
+    navigate('SettingsScreen');
   }
 
   function handleApprovalsNavigation() {
@@ -35,7 +35,7 @@ const Dashboard: React.FC = () => {
       return;
     }
 
-    navigate('Approvals')
+    navigate('Approvals');
   }
 
   function handleSignOut() {
@@ -67,7 +67,11 @@ const Dashboard: React.FC = () => {
         </Button>
         <Button onPress={handleApprovalsNavigation}>
           <ButtonImage>
-            <Icon name="check-square" size={25} color="rgba(255, 255, 255, 0.6)" />
+            <Icon
+              name="check-square"
+              size={25}
+              color="rgba(255, 255, 255, 0.6)"
+            />
           </ButtonImage>
           <ButtonText>Aprovações</ButtonText>
         </Button>
@@ -81,7 +85,7 @@ const Dashboard: React.FC = () => {
         </Button>
       </Container>
     </View>
-  )
+  );
 };
 
 export default Dashboard;

@@ -30,15 +30,15 @@ export const Container = styled.View<ContainerProps>`
   flex-direction: row;
   align-items: center;
 
-  ${props => props.isErrored &&
+  ${props =>
+    props.isErrored &&
     css`
-      border-color: #c53030
-    `
-  }
+      border-color: #c53030;
+    `}
 
-  ${props => props.isFocused &&
+  ${props =>
+    props.isFocused &&
     css`
-      border-color: #ff9000
-    `
-  }
+      border-color: #ff9000;
+    `}
 `;

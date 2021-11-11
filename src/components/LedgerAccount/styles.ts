@@ -14,5 +14,4 @@ export const CodeText = styled.Text`
   font-weight: bold;
 `;
 
-export const DescriptionText = styled.Text`
-`;
+export const DescriptionText = styled.Text``;

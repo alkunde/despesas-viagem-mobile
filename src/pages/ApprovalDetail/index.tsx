@@ -1,5 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from '@react-navigation/native';
 import { FlatList, ActivityIndicator, Alert, View } from 'react-native';
 
 import api from '../../services/api';
@@ -18,7 +22,7 @@ interface ApprovalExpense {
   expenseDate: Date;
   amount: number;
   description: string;
-  category: CategoryProps
+  category: CategoryProps;
   user: object;
   travel: TravelProps;
   checked: boolean;
@@ -35,13 +39,7 @@ const ApprovalDetail: React.FC = () => {
 
   const { goBack } = useNavigation();
 
-  useFocusEffect(
-    useCallback(() => {
-      loadExpenses(route.params.id);
-    }, [])
-  );
-
-  const loadExpenses = useCallback(async (id) => {
+  const loadExpenses = useCallback(async id => {
     try {
       setLoading(true);
       const response = await api.get(`/expenses/travel/${id}`);
@@ -54,6 +52,12 @@ const ApprovalDetail: React.FC = () => {
     }
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      loadExpenses(route.params.id);
+    }, []),
+  );
+
   async function handleClose() {
     if (sendLoading || reportLoading) return;
 
@@ -64,13 +68,9 @@ const ApprovalDetail: React.FC = () => {
         Alert.alert(
           'Aviso',
           'Existem despesas marcadas para reportar. Verifique!',
-          [
-            { text: "OK", onPress: () => setSendLoading(false) }
-          ]
+          [{ text: 'OK', onPress: () => setSendLoading(false) }],
         );
         anyChecked = true;
-
-        return;
       }
     });
 
@@ -106,22 +106,25 @@ const ApprovalDetail: React.FC = () => {
     <Container>
       <Header>Detalhes</Header>
       <Content>
-        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        { networkError && <ServerDown /> }
-        { !loading && !networkError &&
+        {loading && (
+          <ActivityIndicator
+            style={{ marginTop: 16 }}
+            size="large"
+            color="#666"
+          />
+        )}
+        {networkError && <ServerDown />}
+        {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
             data={expenseList}
             showsVerticalScrollIndicator={false}
             keyExtractor={item => String(item.id)}
             renderItem={({ item }) => (
-              <ExpenseReport
-                data={item}
-                onPress={() => handleCheck(item)}
-              />
+              <ExpenseReport data={item} onPress={() => handleCheck(item)} />
             )}
           />
-        }
+        )}
       </Content>
       <View style={{ flexDirection: 'row', paddingLeft: 16, paddingRight: 16 }}>
         <Button
@@ -141,6 +144,6 @@ const ApprovalDetail: React.FC = () => {
       </View>
     </Container>
   );
-}
+};
 
 export default ApprovalDetail;

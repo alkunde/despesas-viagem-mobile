@@ -7,15 +7,15 @@ import { Container } from './styles';
 
 export type UserProps = {
   id: number;
-  name: String;
-  email: String;
-  role: String;
-  active: String;
-}
+  name: string;
+  email: string;
+  role: string;
+  active: string;
+};
 
 type Props = RectButtonProps & {
   data: UserProps;
-}
+};
 
 const User: React.FC<Props> = ({ data, ...rest }) => {
   return (
@@ -23,18 +23,19 @@ const User: React.FC<Props> = ({ data, ...rest }) => {
       <View style={{ flex: 1 }}>
         <Text style={{ color: '#fff' }}>{data.name}</Text>
         <Text style={{ color: '#fff' }}>{data.email}</Text>
-        { data.role === 'admin' && <Text>Admin</Text> }
+        {data.role === 'admin' && <Text>Admin</Text>}
       </View>
       <View style={{ justifyContent: 'center' }}>
         <RectButton {...rest}>
-          { data.active !== 'active'
-            ? <Icon size={25} color="#aaa" name="toggle-left" />
-            : <Icon size={25} color="#1af867" name="toggle-right" />
-          }
+          {data.active !== 'active' ? (
+            <Icon size={25} color="#aaa" name="toggle-left" />
+          ) : (
+            <Icon size={25} color="#1af867" name="toggle-right" />
+          )}
         </RectButton>
       </View>
     </Container>
   );
-}
+};
 
 export default User;

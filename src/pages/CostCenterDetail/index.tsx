@@ -36,52 +36,52 @@ const CostCenterDetail: React.FC = () => {
     }
   }, []);
 
-  const handleAddCostCenter = useCallback(async (data: CostCenterProps) => {
-    if (loading) return;
+  const handleAddCostCenter = useCallback(
+    async (data: CostCenterProps) => {
+      if (loading) return;
 
-    try {
-      formRef.current?.setErrors({});
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        code: Yup.string().required('Campo obrigatório'),
-        description: Yup.string().required('Campo obrigatório'),
-      });
+        const schema = Yup.object().shape({
+          code: Yup.string().required('Campo obrigatório'),
+          description: Yup.string().required('Campo obrigatório'),
+        });
 
-      Keyboard.dismiss();
-      setLoading(true);
+        Keyboard.dismiss();
+        setLoading(true);
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      if (routeParams.costCenterSelected.id) {
-        await api.put(`/cost_centers/${routeParams.costCenterSelected.id}`, data);
-      } else {
-        await api.post('/cost_centers', data);
+        if (routeParams.costCenterSelected.id) {
+          await api.put(
+            `/cost_centers/${routeParams.costCenterSelected.id}`,
+            data,
+          );
+        } else {
+          await api.post('/cost_centers', data);
+        }
+
+        Alert.alert('Sucesso', 'Centro de Custo salvo!');
+
+        navigation.goBack();
+      } catch (err) {
+        setLoading(false);
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+
+        Alert.alert('Falha de conexão', 'Tente novamente mais tarde');
       }
-
-      Alert.alert(
-        'Sucesso',
-        'Centro de Custo salvo!'
-      );
-
-      navigation.goBack();
-    } catch (err) {
-      setLoading(false);
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-
-        formRef.current?.setErrors(errors);
-
-        return;
-      }
-
-      Alert.alert(
-        'Falha de conexão',
-        'Tente novamente mais tarde',
-      );
-    }
-  }, [navigation]);
+    },
+    [navigation],
+  );
 
   return (
     <Container>
@@ -110,6 +110,6 @@ const CostCenterDetail: React.FC = () => {
       </Content>
     </Container>
   );
-}
+};
 
 export default CostCenterDetail;

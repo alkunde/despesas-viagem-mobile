@@ -15,12 +15,6 @@ const UserListScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [networkError, setNetworkError] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadUsers()
-    }, [])
-  );
-
   const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
@@ -33,6 +27,12 @@ const UserListScreen: React.FC = () => {
       setNetworkError(true);
     }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadUsers();
+    }, []),
+  );
 
   async function handleActive(item: UserProps) {
     if (item.active === 'active') {
@@ -48,25 +48,28 @@ const UserListScreen: React.FC = () => {
     <Container>
       <Header>Usuários</Header>
       <Content>
-        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        { networkError && <ServerDown /> }
-        { !loading && !networkError &&
+        {loading && (
+          <ActivityIndicator
+            style={{ marginTop: 16 }}
+            size="large"
+            color="#666"
+          />
+        )}
+        {networkError && <ServerDown />}
+        {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
             data={users}
             showsVerticalScrollIndicator={false}
             keyExtractor={item => String(item.id)}
             renderItem={({ item }) => (
-              <User
-                data={item}
-                onPress={() => handleActive(item)}
-              />
+              <User data={item} onPress={() => handleActive(item)} />
             )}
           />
-        }
+        )}
       </Content>
     </Container>
   );
-}
+};
 
 export default UserListScreen;

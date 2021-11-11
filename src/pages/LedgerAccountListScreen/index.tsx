@@ -8,22 +8,21 @@ import Header from '../../components/Header';
 import Button from '../../components/Button';
 import NotFound from '../../components/NotFound';
 import ServerDown from '../../components/ServerDown';
-import { LedgerAccount, LedgerAccountProps } from '../../components/LedgerAccount';
+import {
+  LedgerAccount,
+  LedgerAccountProps,
+} from '../../components/LedgerAccount';
 
 import { Container, Content } from './styles';
 
 const LedgerAccountListScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [networkError, setNetworkError] = useState(false);
-  const [ledgerAccountList, setLedgerAccountList] = useState<LedgerAccountProps[]>([]);
+  const [ledgerAccountList, setLedgerAccountList] = useState<
+    LedgerAccountProps[]
+  >([]);
 
   const { navigate } = useNavigation();
-
-  useFocusEffect(
-    useCallback(() => {
-      loadLedgerAccounts();
-    }, [])
-  );
 
   const loadLedgerAccounts = useCallback(async () => {
     try {
@@ -38,7 +37,15 @@ const LedgerAccountListScreen: React.FC = () => {
     }
   }, []);
 
-  function handleLedgetAccountDetail(ledgerAccountSelected: LedgerAccountProps) {
+  useFocusEffect(
+    useCallback(() => {
+      loadLedgerAccounts();
+    }, []),
+  );
+
+  function handleLedgetAccountDetail(
+    ledgerAccountSelected: LedgerAccountProps,
+  ) {
     if (networkError) return;
 
     navigate('LedgerAccountDetail', { ledgerAccountSelected });
@@ -50,30 +57,39 @@ const LedgerAccountListScreen: React.FC = () => {
       <Content>
         <Button
           loading={false}
-          onPress={() => handleLedgetAccountDetail({}  as LedgerAccountProps)}
+          onPress={() => handleLedgetAccountDetail({} as LedgerAccountProps)}
         >
           Nova Conta Contábil
         </Button>
-        { loading && <ActivityIndicator style={{ marginTop: 16 }} size="large" color="#666" /> }
-        { networkError && <ServerDown /> }
-        { !networkError && (!ledgerAccountList || ledgerAccountList.length === 0) && <NotFound /> }
-        { !loading && !networkError &&
+        {loading && (
+          <ActivityIndicator
+            style={{ marginTop: 16 }}
+            size="large"
+            color="#666"
+          />
+        )}
+        {networkError && <ServerDown />}
+        {!networkError &&
+          (!ledgerAccountList || ledgerAccountList.length === 0) && (
+            <NotFound />
+          )}
+        {!loading && !networkError && (
           <FlatList
             style={{ marginTop: 8 }}
             data={ledgerAccountList}
             showsVerticalScrollIndicator={false}
             keyExtractor={item => String(item.id)}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <LedgerAccount
                 data={item}
                 onPress={() => handleLedgetAccountDetail(item)}
               />
             )}
           />
-        }
+        )}
       </Content>
     </Container>
-  )
-}
+  );
+};
 
 export default LedgerAccountListScreen;

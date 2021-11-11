@@ -6,6 +6,7 @@ import {
   Alert,
   Modal,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
@@ -15,12 +16,13 @@ import Icon from 'react-native-vector-icons/Feather';
 import * as Yup from 'yup';
 
 import api from '../../services/api';
-import { useAuth } from '../../hooks/auth';
-import getValidationErrors from '../../utils/getValidationErrors';
+
 import Header from '../../components/Header';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { CostCenterProps } from '../../components/CostCenter';
+import { useAuth } from '../../hooks/auth';
+import getValidationErrors from '../../utils/getValidationErrors';
 
 import {
   Container,
@@ -30,7 +32,6 @@ import {
   BackButton,
   ItemList,
 } from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface TravelFormData {
   origin: string;
@@ -75,72 +76,73 @@ const TravelDetail: React.FC = () => {
     loadCostCenters();
   }, []);
 
-  const toFloatNumber = useCallback((value: String) => {
+  const toFloatNumber = useCallback((value: string) => {
     const str = value.trim().replace(/([^0-9])/g, '');
     const numero = parseInt(str) / 100;
 
     return numero;
   }, []);
 
-
-  const handleAddTravel = useCallback(async (data: TravelFormData) => {
-    if (departureDate > arrivalDate) {
-      formRef.current?.setFieldError('departureDate', 'Data de partida não pode ser maior');
-      return;
-    }
-
-    try {
-      formRef.current?.setErrors({});
-
-      const schema = Yup.object().shape({
-        origin: Yup.string().required('Campo obrigatório'),
-        destination: Yup.string().required('Campo obrigatório'),
-        arrivalDate: Yup.string().required('Campo obrigatório'),
-        departureDate: Yup.string().required('Campo obrigatório'),
-        reason: Yup.string().required('Campo obrigatório'),
-        costCenter: Yup.string().required('Campo obrigatório'),
-      });
-
-      Keyboard.dismiss();
-      setLoading(true);
-
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-
-      data.user = user;
-      data.amount = toFloatNumber(formRef.current?.getFieldValue('advancedAmount'));
-      data.departureYear = departureDate.getFullYear();
-      data.departureMonth = departureDate.getMonth() + 1;
-      data.departureDay = departureDate.getDate();
-      data.arrivalYear = arrivalDate.getFullYear();
-      data.arrivalMonth = arrivalDate.getMonth() + 1;
-      data.arrivalDay = arrivalDate.getDate();
-      data.costCenter = costCenter;
-
-      await api.post('/travels', data);
-
-      Alert.alert(
-        'Sucesso',
-        'Viagem cadastrada com sucesso!'
-      );
-      navigation.goBack();
-    } catch (err) {
-      setLoading(false);
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-
-        formRef.current?.setErrors(errors);
-
+  const handleAddTravel = useCallback(
+    async (data: TravelFormData) => {
+      if (departureDate > arrivalDate) {
+        formRef.current?.setFieldError(
+          'departureDate',
+          'Data de partida não pode ser maior',
+        );
         return;
       }
 
-      Alert.alert(
-        'Falha de conexão',
-        'Tente novamente mais tarde',
-      );
-    }
-  }, [navigation, costCenter]);
+      try {
+        formRef.current?.setErrors({});
+
+        const schema = Yup.object().shape({
+          origin: Yup.string().required('Campo obrigatório'),
+          destination: Yup.string().required('Campo obrigatório'),
+          arrivalDate: Yup.string().required('Campo obrigatório'),
+          departureDate: Yup.string().required('Campo obrigatório'),
+          reason: Yup.string().required('Campo obrigatório'),
+          costCenter: Yup.string().required('Campo obrigatório'),
+        });
+
+        Keyboard.dismiss();
+        setLoading(true);
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        data.user = user;
+        data.amount = toFloatNumber(
+          formRef.current?.getFieldValue('advancedAmount'),
+        );
+        data.departureYear = departureDate.getFullYear();
+        data.departureMonth = departureDate.getMonth() + 1;
+        data.departureDay = departureDate.getDate();
+        data.arrivalYear = arrivalDate.getFullYear();
+        data.arrivalMonth = arrivalDate.getMonth() + 1;
+        data.arrivalDay = arrivalDate.getDate();
+        data.costCenter = costCenter;
+
+        await api.post('/travels', data);
+
+        Alert.alert('Sucesso', 'Viagem cadastrada com sucesso!');
+        navigation.goBack();
+      } catch (err) {
+        setLoading(false);
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+
+        Alert.alert('Falha de conexão', 'Tente novamente mais tarde');
+      }
+    },
+    [navigation, costCenter],
+  );
 
   const handleCancelDepartureDate = useCallback(() => {
     setShowDepartureDatePicker(false);
@@ -150,27 +152,36 @@ const TravelDetail: React.FC = () => {
     setShowArrivalDatePicker(false);
   }, []);
 
-  const handleConfirmDepartureDate = useCallback((data) => {
+  const handleConfirmDepartureDate = useCallback(data => {
     setDepartureDate(data);
-    formRef.current?.setFieldValue('departureDate', data.toLocaleDateString('pt-BR'));
+    formRef.current?.setFieldValue(
+      'departureDate',
+      data.toLocaleDateString('pt-BR'),
+    );
 
     setShowDepartureDatePicker(false);
   }, []);
 
-  const handleConfirmArrivalDate = useCallback((data) => {
+  const handleConfirmArrivalDate = useCallback(data => {
     setArrivalDate(data);
-    formRef.current?.setFieldValue('arrivalDate', data.toLocaleDateString('pt-BR'));
+    formRef.current?.setFieldValue(
+      'arrivalDate',
+      data.toLocaleDateString('pt-BR'),
+    );
 
     setShowArrivalDatePicker(false);
   }, []);
 
-  const changeAdvancedAmountValue = useCallback((text: String) => {
-    const str = text.toString().trim().replace(/([^0-9])/g, '');
+  const changeAdvancedAmountValue = useCallback((text: string) => {
+    const str = text
+      .toString()
+      .trim()
+      .replace(/([^0-9])/g, '');
     const numero = parseInt(str) / 100;
-    const converted = numero.toLocaleString(
-      'pt-BR',
-      { style: 'currency', currency: 'BRL' }
-    );
+    const converted = numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
     formRef.current?.setFieldValue('advancedAmount', converted);
   }, []);
 
@@ -231,10 +242,7 @@ const TravelDetail: React.FC = () => {
             />
           </Form>
         </ScrollView>
-        <Button
-          loading={loading}
-          onPress={() => formRef.current?.submitForm()}
-        >
+        <Button loading={loading} onPress={() => formRef.current?.submitForm()}>
           Salvar
         </Button>
       </Content>
@@ -260,7 +268,7 @@ const TravelDetail: React.FC = () => {
       />
 
       <Modal
-        animationType={"slide"}
+        animationType="slide"
         presentationStyle="formSheet"
         visible={showPicker}
       >
@@ -282,9 +290,8 @@ const TravelDetail: React.FC = () => {
           />
         </>
       </Modal>
-
     </Container>
   );
-}
+};
 
 export default TravelDetail;

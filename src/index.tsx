@@ -12,7 +12,10 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor="#3f88c5" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar
+        backgroundColor="#2f5474"
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      />
       <AppProvider>
         <View style={{ flex: 1 }}>
           <Routes />

@@ -72,7 +72,9 @@ const SignIn: React.FC = () => {
           'Ocorreu um erro ao fazer login, cheque as credenciais',
         );
       }
-    }, [signIn]);
+    },
+    [signIn],
+  );
 
   return (
     <>
@@ -102,7 +104,10 @@ const SignIn: React.FC = () => {
               returnKeyType="send"
               onSubmitEditing={() => formRef.current?.submitForm()}
             />
-            <Button loading={loading} onPress={() => formRef.current?.submitForm()}>
+            <Button
+              loading={loading}
+              onPress={() => formRef.current?.submitForm()}
+            >
               Entrar
             </Button>
           </Form>

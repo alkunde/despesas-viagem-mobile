@@ -36,4 +36,3 @@ export const ItemList = styled.Text`
   padding: 16px;
   font-size: 16px;
 `;
-
