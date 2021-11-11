@@ -212,12 +212,18 @@ const TravelDetail: React.FC = () => {
             <Input
               name="departureDate"
               placeholder="Informe a data de partida"
-              onPressIn={() => setShowDepartureDatePicker(true)}
+              onPressIn={() => {
+                Keyboard.dismiss();
+                setShowDepartureDatePicker(true);
+              }}
             />
             <Input
               name="arrivalDate"
               placeholder="Informe a data de chegada"
-              onPressIn={() => setShowArrivalDatePicker(true)}
+              onPressIn={() => {
+                Keyboard.dismiss();
+                setShowArrivalDatePicker(true);
+              }}
             />
             <Input
               autoCapitalize="sentences"

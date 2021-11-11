@@ -36,7 +36,7 @@ const Approvals: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       loadApprovals();
-    }, []),
+    }, [loadApprovals]),
   );
 
   function handleApprovalDetail(approvalSelected: ApprovalProps) {

@@ -34,16 +34,28 @@ type Props = RectButtonProps & {
 };
 
 export const ExpenseReport: React.FC<Props> = ({ data, ...rest }) => {
+  const { description, amount, expenseDate, category } = data;
+
+  const amountFormatted = amount.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+
   return (
     <Container>
       <View style={{ flex: 1 }}>
-        <DescriptionText>Descrição: {data.description}</DescriptionText>
-        <AmountText>Valor: {data.amount}</AmountText>
-        <DateText>Data: {data.expenseDate}</DateText>
-        <CategoryText>Categoria: {data.category.description}</CategoryText>
+        <DescriptionText>Descrição: {description}</DescriptionText>
+        <AmountText>Valor: {amountFormatted}</AmountText>
+        <DateText>Data: {expenseDate}</DateText>
+        <CategoryText>Categoria: {category.description}</CategoryText>
       </View>
-      <View style={{ justifyContent: 'center', margin: 16 }}>
-        <RectButton {...rest}>
+      <View
+        style={{
+          justifyContent: 'center',
+          margin: 16,
+        }}
+      >
+        <RectButton {...rest} style={{ alignItems: 'center' }}>
           <Icon name="x" size={25} color="#2212aa" />
           <Text>Marcar</Text>
         </RectButton>

@@ -70,7 +70,7 @@ const ExpenseDetail: React.FC = () => {
     const str = newNumber
       .toString()
       .trim()
-      .replace(/([ˆ0-9])/g, '');
+      .replace(/([^0-9])/g, '');
     const numero = parseInt(str) / 100;
 
     return numero.toLocaleString('pt-BR', {
@@ -105,10 +105,10 @@ const ExpenseDetail: React.FC = () => {
         expenseDate.toLocaleDateString('pt-BR'),
       );
     }
-  }, []);
+  }, [expenseDate, routeParams, toCurrency]);
 
   const toFloatNumber = useCallback((value: string) => {
-    const str = value.trim().replace(/([ˆ0-9])/g, '');
+    const str = value.trim().replace(/([^0-9])/g, '');
     const numero = parseInt(str) / 100;
 
     return numero;
@@ -190,14 +190,22 @@ const ExpenseDetail: React.FC = () => {
         Alert.alert('Falha de conexão', 'Tente novamente mais tarde');
       }
     },
-    [navigation, category],
+    [
+      navigation,
+      category,
+      expenseDate,
+      loading,
+      toFloatNumber,
+      routeParams.expenseSelected.id,
+      user,
+    ],
   );
 
   const changeAmountValue = useCallback((text: string) => {
     const str = text
       .toString()
       .trim()
-      .replace(/([ˆ0-9])/g, '');
+      .replace(/([^0-9])/g, '');
     const numero = parseInt(str) / 100;
     const converted = numero.toLocaleString('pt-BR', {
       style: 'currency',
@@ -207,7 +215,7 @@ const ExpenseDetail: React.FC = () => {
   }, []);
 
   const handleItemSelected = useCallback((item: CategoryProps) => {
-    formRef.current?.setFieldValue('categoty', item.description);
+    formRef.current?.setFieldValue('category', item.description);
     setCategory(item);
     setShowPicker(false);
   }, []);
@@ -242,7 +250,10 @@ const ExpenseDetail: React.FC = () => {
             <Input
               name="expenseDate"
               placeholder="Informe a data"
-              onPressIn={() => setShowDatePicker(true)}
+              onPressIn={() => {
+                Keyboard.dismiss();
+                setShowDatePicker(true);
+              }}
             />
           </Form>
         </ScrollView>
