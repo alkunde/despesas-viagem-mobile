@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Alert, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -12,35 +12,35 @@ const Dashboard: React.FC = () => {
 
   const { user, signOut } = useAuth();
 
-  function handleExpenseNavigation() {
+  const handleExpenseNavigation = useCallback(() => {
     navigate('Expenses');
-  }
+  }, [navigate]);
 
-  function handleTravelNavigation() {
+  const handleTravelNavigation = useCallback(() => {
     navigate('Travels');
-  }
+  }, [navigate]);
 
-  function handleConfigureNavigation() {
+  const handleConfigureNavigation = useCallback(() => {
     if (!user.admin) {
       Alert.alert('Aviso', 'Função habilitada apenas para administradores');
       return;
     }
 
     navigate('SettingsScreen');
-  }
+  }, [user.admin, navigate]);
 
-  function handleApprovalsNavigation() {
+  const handleApprovalsNavigation = useCallback(() => {
     if (!user.admin) {
       Alert.alert('Aviso', 'Função habilitada apenas para administradores');
       return;
     }
 
     navigate('Approvals');
-  }
+  }, [user.admin, navigate]);
 
-  function handleSignOut() {
+  const handleSignOut = useCallback(() => {
     signOut();
-  }
+  }, [signOut]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
